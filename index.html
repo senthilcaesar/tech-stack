@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StackSync | Interactive Tech Stack Directory & Architecture Simulator</title>
+  <meta name="description" content="An interactive educational guide to modern frontend, backend, database, and API technologies. Build custom stacks and simulate request flows.">
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Reset and Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    :root {
+      --bg-color: #080b11;
+      --panel-bg: rgba(13, 18, 30, 0.7);
+      --panel-border: rgba(255, 255, 255, 0.07);
+      --panel-border-hover: rgba(99, 102, 241, 0.3);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      
+      --primary: #6366f1; /* Electric Indigo */
+      --primary-rgb: 99, 102, 241;
+      --secondary: #06b6d4; /* Cyber Cyan */
+      --secondary-rgb: 6, 182, 212;
+      --accent: #f43f5e; /* Rose */
+      --success: #10b981; /* Emerald */
+      
+      --glow-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+      --glow-shadow-strong: 0 0 30px rgba(6, 182, 212, 0.4);
+    }
+
+    body.light-mode {
+      --bg-color: #f8fafc;
+      --panel-bg: rgba(255, 255, 255, 0.85);
+      --panel-border: rgba(0, 0, 0, 0.08);
+      --panel-border-hover: rgba(99, 102, 241, 0.4);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      
+      --primary: #4f46e5;
+      --secondary: #0891b2;
+      
+      --glow-shadow: 0 4px 20px rgba(99, 102, 241, 0.08);
+      --glow-shadow-strong: 0 4px 30px rgba(6, 182, 212, 0.15);
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--panel-border);
+      color: var(--text-primary);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--panel-border-hover);
+      transform: scale(1.08);
+      box-shadow: var(--glow-shadow);
+    }
+    body.light-mode .theme-toggle-btn {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    body.light-mode .theme-toggle-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    /* Light Mode Custom Adaptations */
+    body.light-mode h1 {
+      background: linear-gradient(135deg, #0f172a 30%, #4338ca 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light-mode .ambient-glow {
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 0%, rgba(0,0,0,0) 70%);
+    }
+    body.light-mode .ambient-glow-2 {
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.03) 0%, rgba(0,0,0,0) 70%);
+    }
+    body.light-mode .flow-line {
+      stroke: rgba(0, 0, 0, 0.08);
+    }
+    body.light-mode tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    body.light-mode .card-footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    body.light-mode .tab-item.active {
+      background: rgba(99, 102, 241, 0.08);
+      color: #4f46e5;
+    }
+    body.light-mode .blueprint-board {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    body.light-mode .blueprint-slot {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+    body.light-mode .blueprint-slot.active-slot {
+      background: rgba(99, 102, 241, 0.03);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+    body.light-mode .slot-tech-tag {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.06);
+      color: var(--text-primary);
+    }
+    body.light-mode .slot-tech-tag.empty {
+      color: var(--text-muted);
+    }
+    body.light-mode .modal-card {
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    body.light-mode .modal-meta-card {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .pro-item, body.light-mode .con-item {
+      color: var(--text-secondary);
+    }
+
+    /* Ambient Background Glows */
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(0,0,0,0) 70%);
+      top: -150px;
+      left: -150px;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 20s infinite alternate ease-in-out;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, rgba(0,0,0,0) 70%);
+      bottom: -100px;
+      right: -100px;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 25s infinite alternate-reverse ease-in-out;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 80px) scale(1.1); }
+    }
+
+    /* Global Layout Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Section */
+    header {
+      margin-bottom: 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .logo-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-icon {
+      color: var(--secondary);
+      animation: spin-slow 15s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .logo-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.6;
+    }
+
+    /* Header Counters */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .stat-badge:hover {
+      border-color: var(--panel-border-hover);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .stat-badge.active {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: var(--primary);
+      color: var(--text-primary);
+      box-shadow: var(--glow-shadow);
+      transform: scale(1.02);
+    }
+
+    body.light-mode .stat-badge:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    body.light-mode .stat-badge.active {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: var(--primary);
+    }
+
+    .stat-number {
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    /* Main Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Glassmorphism Panel base */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: border-color 0.3s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .panel-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 0.75rem;
+    }
+
+    .panel-title i {
+      color: var(--primary);
+    }
+
+    /* Column 1: Tech Directory Control Center */
+    .controls-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-container {
+      position: relative;
+      flex-grow: 1;
+      min-width: 250px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--panel-border);
+      padding: 0 1rem 0 2.75rem;
+      height: 42px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .search-container i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .view-toggle {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 3px;
+      height: 42px;
+      box-sizing: border-box;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      height: 100%;
+      padding: 0 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .toggle-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Category Filter Tabs */
+    .tabs-wrapper {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      scrollbar-width: thin;
+    }
+
+    .tab-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      color: var(--text-secondary);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-item:hover {
+      border-color: var(--panel-border-hover);
+      color: var(--text-primary);
+    }
+
+    .tab-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--primary);
+      color: #a5b4fc;
+    }
+
+    /* Table View */
+    .table-container {
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      padding: 1rem;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    td {
+      padding: 1.1rem 1rem;
+      vertical-align: middle;
+      font-size: 0.9rem;
+    }
+
+    .tech-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .tech-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-frontend {
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      color: #22d3ee;
+    }
+    .tag-backend {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+      color: #fb7185;
+    }
+    .tag-database {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+    .tag-other {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+    }
+
+    .popularity-bar-container {
+      width: 100px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    .popularity-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 9999px;
+    }
+
+    .popularity-val {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .tech-link {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .tech-link:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--panel-border);
+      color: var(--text-primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+    
+    .action-btn.add-btn {
+      color: var(--secondary);
+    }
+    
+    .action-btn.add-btn:hover {
+      background: var(--secondary);
+      border-color: var(--secondary);
+      color: #000;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Grid View Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tech-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .tech-card:hover {
+      border-color: var(--panel-border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--glow-shadow);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-body {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 0.75rem;
+    }
+
+    /* Hidden State */
+    .hidden {
+      display: none !important;
+    }
+
+
+    /* Column 2: Architecture Blueprint Board & Console */
+    .playground-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .blueprint-board {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    /* SVG Connector Line Overlay */
+    .connector-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .flow-line {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 2;
+      transition: all 0.5s ease;
+    }
+
+    .flow-line.active {
+      stroke: var(--primary);
+      stroke-dasharray: 6, 6;
+      animation: dash 15s linear infinite;
+    }
+
+    .flow-line.simulating {
+      stroke: var(--secondary);
+      stroke-dasharray: 8, 4;
+      animation: dash-fast 2s linear infinite;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -1000;
+      }
+    }
+
+    @keyframes dash-fast {
+      to {
+        stroke-dashoffset: -40;
+      }
+    }
+
+    .blueprint-slot {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .blueprint-slot.active-slot {
+      background: rgba(99, 102, 241, 0.05);
+      border-color: var(--panel-border-hover);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.1);
+    }
+
+    .slot-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .slot-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .slot-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .slot-tech-tag {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      border: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .slot-tech-tag.empty {
+      color: var(--text-muted);
+      border-style: dashed;
+      background: transparent;
+    }
+
+    .remove-slot-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .remove-slot-btn:hover {
+      color: var(--accent);
+      background: rgba(244, 63, 94, 0.1);
+    }
+
+    /* Simulation Execution Button */
+    .simulate-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border: none;
+      color: white;
+      padding: 0.9rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .simulate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+      filter: brightness(1.1);
+    }
+
+    .simulate-btn:active {
+      transform: translateY(0);
+    }
+
+    .simulate-btn:disabled {
+      background: var(--panel-border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Simulation Output Console / Terminal */
+    .terminal-panel {
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+
+    .terminal-title {
+      font-size: 0.75rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .terminal-clear {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .terminal-clear:hover {
+      color: var(--text-primary);
+    }
+
+    .terminal-body {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #34d399; /* Green text by default */
+      height: 180px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      scrollbar-width: thin;
+      padding-right: 0.5rem;
+    }
+
+    .console-line {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .console-timestamp {
+      color: #58a6ff;
+      flex-shrink: 0;
+    }
+
+    .console-info {
+      color: #8b949e;
+      flex-shrink: 0;
+    }
+
+    .console-text {
+      color: #e2e8f0;
+      word-break: break-all;
+    }
+
+    .console-success {
+      color: var(--success);
+    }
+
+    .console-warning {
+      color: var(--warning);
+    }
+
+
+    /* Detail Modal Glassmorphism styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 6, 10, 0.7);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      background: rgba(13, 18, 30, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 90%;
+      max-width: 800px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      transform: scale(0.95) translateY(10px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh;
+    }
+
+    .modal-overlay.open .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .modal-icon-container {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .modal-title-wrapper h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .close-modal-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--panel-border);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .close-modal-btn:hover {
+      background: rgba(244, 63, 94, 0.1);
+      color: var(--accent);
+      border-color: rgba(244, 63, 94, 0.2);
+    }
+
+    .modal-body {
+      padding: 1.75rem;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .modal-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .modal-meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .modal-meta-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .modal-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .pros-cons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .pros-cons-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pro-item {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .pro-item i {
+      color: var(--success);
+      flex-shrink: 0;
+    }
+
+    .con-item {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .con-item i {
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Code Snippet Frame */
+    .code-frame {
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-language {
+      font-size: 0.75rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+
+    .code-copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.2s ease;
+    }
+
+    .code-copy-btn:hover {
+      color: var(--text-primary);
+    }
+
+    pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    /* Tooltip / Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: rgba(16, 185, 129, 0.9);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Educational Section */
+    .edu-section {
+      margin-top: 3rem;
+      border-top: 1px solid var(--panel-border);
+      padding-top: 3rem;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .edu-card {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .edu-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .edu-card p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 5rem;
+      border-top: 1px solid var(--panel-border);
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Scrollbar Style */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle theme">🌙</button>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Toast Toast Notification -->
+  <div id="toast" class="toast">
+    <i data-lucide="check-circle-2"></i>
+    <span id="toast-message">Copied successfully!</span>
+  </div>
+
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header>
+      <h1>Interactive Tech Stack Guide</h1>
+      <p>An educational companion detailing modern Frontend, Backend, Database, and API components.</p>
+      
+      <div class="stats-bar">
+        <div class="stat-badge" id="badge-frontend" title="Click to filter by Frontend components">
+          <i data-lucide="layout" size="14" style="color: var(--secondary)"></i>
+          <span>Frontend Layer:</span>
+          <span class="stat-number" id="count-frontend">0</span>
+        </div>
+        <div class="stat-badge" id="badge-backend" title="Click to filter by Backend components">
+          <i data-lucide="server" size="14" style="color: var(--accent)"></i>
+          <span>Backend Layer:</span>
+          <span class="stat-number" id="count-backend">0</span>
+        </div>
+        <div class="stat-badge" id="badge-db-api" title="Click to filter by Databases & APIs">
+          <i data-lucide="database" size="14" style="color: var(--success)"></i>
+          <span>Database & APIs:</span>
+          <span class="stat-number" id="count-db-api">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- Left Column: Interactive Tech Stack Directory -->
+      <section class="panel">
+
+        <!-- Controls (View Toggler) -->
+        <div class="controls-wrapper">
+          <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); min-width: max-content;" id="result-count">Showing all items</span>
+          
+          <div class="view-toggle" style="margin-left: auto;">
+            <button class="toggle-btn active" id="view-table-btn" title="Table View">
+              <i data-lucide="table" size="16"></i>
+              <span>Table</span>
+            </button>
+            <button class="toggle-btn" id="view-grid-btn" title="Grid View">
+              <i data-lucide="grid" size="16"></i>
+              <span>Grid</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="tabs-wrapper" id="category-tabs">
+          <div class="tab-item active" data-category="all">All Ecosystems</div>
+          <div class="tab-item" data-category="Frontend">Frontend Core</div>
+          <div class="tab-item" data-category="Frontend Styling">UI & Animations</div>
+          <div class="tab-item" data-category="Frontend State">State Management</div>
+          <div class="tab-item" data-category="Backend">Backend Services</div>
+          <div class="tab-item" data-category="Database">Databases</div>
+          <div class="tab-item" data-category="API Layer">API Protocols</div>
+        </div>
+
+        <!-- Table View Structure -->
+        <div class="table-container" id="table-view">
+          <table>
+            <thead>
+              <tr>
+                <th>Technology</th>
+                <th>Category</th>
+                <th>Ecosystem Role</th>
+                <th>Popularity</th>
+                <th style="width: 80px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tech-table-body">
+              <!-- JS Injected rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Grid View Structure -->
+        <div class="cards-grid hidden" id="grid-view">
+          <!-- JS Injected cards -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Educational Resource Section -->
+    <section class="edu-section">
+      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; text-align: center;">Core Architecture Concepts</h2>
+      <div class="edu-grid">
+        <div class="edu-card">
+          <h3>
+            <i data-lucide="layers" size="18"></i>
+            <span>Frontend & Hydration</span>
+          </h3>
+          <p>Modern frontend frameworks compile code into static packages or hydrate dynamically via Server-Side Rendering (SSR). Next.js provides hybrid capabilities supporting fast pre-rendering for SEO alongside client-side interactivity powered by React.</p>
+        </div>
+        <div class="edu-card">
+          <h3>
+            <i data-lucide="activity" size="18"></i>
+            <span>Client State Management</span>
+          </h3>
+          <p>State solutions like Zustand avoid prop drilling by establishing an external centralized store. Highly integrated UI tools like Framer Motion rely on state updates to orchestrate smooth UI animations and responsive interactions.</p>
+        </div>
+        <div class="edu-card">
+          <h3>
+            <i data-lucide="shield" size="18"></i>
+            <span>API Security & Protocols</span>
+          </h3>
+          <p>APIs govern application pathways. REST models structure clean endpoints while FastAPI automates schemas, and NestJS structures enterprise interceptors to control request payloads securely before database ingestion.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 StackSync Developer Labs. All rights reserved. Created for educational reference. All metrics are updated periodically.</p>
+    </footer>
+
+  </div>
+
+  <!-- Detail Specs Modal Overlay -->
+  <div class="modal-overlay" id="tech-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-icon-container" id="modal-tech-icon">
+            <!-- Dynamic Initial -->
+          </div>
+          <div class="modal-title-wrapper">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <h2 id="modal-tech-title">Technology Details</h2>
+              <a href="#" id="modal-tech-link" target="_blank" rel="noopener noreferrer" style="color: var(--secondary); display: inline-flex; align-items: center;" title="Visit Official Website">
+                <i data-lucide="external-link" size="16"></i>
+              </a>
+            </div>
+            <span class="tag tag-frontend" id="modal-tech-badge">Category</span>
+          </div>
+        </div>
+        <button class="close-modal-btn" id="close-modal-btn" aria-label="Close modal">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Description -->
+        <div>
+          <h4 class="modal-section-title">Overview</h4>
+          <p id="modal-tech-desc" style="line-height: 1.6; color: var(--text-secondary); font-size: 0.95rem;"></p>
+        </div>
+        
+        <!-- Popularity Context -->
+        <div class="modal-meta-grid">
+          <div class="modal-meta-card">
+            <h4 class="modal-section-title">Why it's popular in 2026</h4>
+            <p id="modal-popularity-text" style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary);"></p>
+          </div>
+          <div class="modal-meta-card" style="display: flex; flex-direction: column; justify-content: center; gap: 0.5rem;">
+            <h4 class="modal-section-title">Developer Adoption Index</h4>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="popularity-bar-container" style="width: 100%; height: 8px;">
+                <div class="popularity-bar" id="modal-popularity-bar" style="width: 0%;"></div>
+              </div>
+              <span class="popularity-val" id="modal-popularity-percentage" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pros & Cons -->
+        <div class="pros-cons-grid">
+          <div>
+            <h4 class="modal-section-title">Primary Strengths</h4>
+            <div id="modal-pros-list">
+              <!-- Dynamic pros -->
+            </div>
+          </div>
+          <div>
+            <h4 class="modal-section-title">Key Trade-offs</h4>
+            <div id="modal-cons-list">
+              <!-- Dynamic cons -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Block -->
+        <div>
+          <h4 class="modal-section-title">Implementation Pattern</h4>
+          <div class="code-frame">
+            <div class="code-header">
+              <span class="code-language" id="modal-code-lang">JavaScript</span>
+              <button class="code-copy-btn" id="modal-copy-code-btn">
+                <i data-lucide="copy" size="14"></i>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <pre><code id="modal-code-body">
+// Code goes here
+            </code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Logic Script -->
+  <script>
+    // Tech Stack database
+    const techStack = [
+      {
+        id: "react",
+        name: "React",
+        category: "Frontend",
+        role: "UI Library",
+        popularity: 95,
+        link: "https://react.dev",
+        highlight: "Component-driven UI construction with dynamic rendering.",
+        description: "React is a declarative, efficient, and flexible JavaScript library for building user interfaces. It enables developers to create modular, reusable UI components that manage their own state.",
+        whyPopular: "React maintains global dominance due to its massive library ecosystem, widespread talent pool, and the development of React Server Components (RSC) which significantly reduce payload delivery sizes.",
+        pros: [
+          "Enormous community support & open-source solutions",
+          "Component reusability accelerates application workflows",
+          "Excellent custom dev tooling and debugging experience"
+        ],
+        cons: [
+          "Requires custom routing & build configs for multi-page architectures",
+          "Frequent API pattern shifts require ongoing developer education"
+        ],
+        code: `import React, { useState } from 'react';\n\nexport function Counter() {\n  const [count, setCount] = useState(0);\n  \n  return (\n    <div className="flex flex-col items-center p-4">\n      <p className="text-xl">Count: {count}</p>\n      <button \n        onClick={() => setCount(count + 1)}\n        className="px-4 py-2 bg-indigo-600 rounded text-white"\n      >\n        Increment Count\n      </button>\n    </div>\n  );\n}`
+      },
+      {
+        id: "nextjs",
+        name: "Next.js",
+        category: "Frontend",
+        role: "Meta-Framework",
+        popularity: 92,
+        link: "https://nextjs.org",
+        highlight: "Production-ready framework with server-side rendering (SSR).",
+        description: "Next.js is the leading full-stack framework for React. It integrates advanced server-side features like SSR, Static Site Generation (SSG), and incremental static regeneration with smart routing and bundling optimizations.",
+        whyPopular: "Next.js simplifies React optimization. Its App Router supports Server Actions, streaming, and automatic code-splitting, making it the industry go-to for standard enterprise React sites.",
+        pros: [
+          "First-class SEO out of the box with server-side pre-rendering",
+          "Built-in routing, API routes, and bundle compilation",
+          "Native integration with Vercel and serverless architectures"
+        ],
+        cons: [
+          "Steep learning curve adapting to server-versus-client constraints",
+          "Build outputs can grow complex, making self-hosting hosting environments tricky"
+        ],
+        code: `// app/posts/page.tsx (React Server Component)\ninterface Post { id: number; title: string; }\n\nexport default async function PostsPage() {\n  // Data fetched securely directly on the server\n  const res = await fetch('https://api.example.com/posts');\n  const posts: Post[] = await res.json();\n\n  return (\n    <main className="p-6">\n      <h1 class="text-2xl font-bold">Latest Posts</h1>\n      <ul>\n        {posts.map(post => (\n          <li key={post.id} className="mt-2">{post.title}</li>\n        ))}\n      </ul>\n    </main>\n  );\n}`
+      },
+      {
+        id: "vite",
+        name: "Vite 8",
+        category: "Frontend Tooling",
+        role: "Bundler & Dev Server",
+        popularity: 90,
+        link: "https://vite.dev",
+        highlight: "Extremely fast development server and build tool.",
+        description: "Vite is an exceptionally fast frontend build tool. During development, it leverages native browser ES modules to spin up local servers instantly, utilizing Rollup for highly optimized production assets.",
+        whyPopular: "Vite has become the industry replacement for Webpack. It is the default builder for modern frameworks like Vue, Svelte, and vanilla React, dramatically improving developer hot-reload times.",
+        pros: [
+          "Near-instantaneous local development server startup",
+          "Lightning-fast Hot Module Replacement (HMR)",
+          "Extensible plugin architecture based on Rollup API"
+        ],
+        cons: [
+          "Differences between ESM-dev and Rollup-prod can cause rare deployment discrepancies",
+          "Requires custom plugins for legacy browser configurations"
+        ],
+        code: `// vite.config.ts\nimport { defineConfig } from 'vite';\nimport react from '@vitejs/plugin-react';\n\nexport default defineConfig({\n  plugins: [react()],\n  server: {\n    port: 3000,\n    open: true\n  },\n  build: {\n    outDir: 'dist',\n    sourcemap: true\n  }\n});`
+      },
+      {
+        id: "zustand",
+        name: "Zustand",
+        category: "Frontend State",
+        role: "State Management",
+        popularity: 88,
+        link: "https://zustand-demo.pmnd.rs",
+        highlight: "A small, fast, and scalable bearbones state-management solution.",
+        description: "Zustand is a lightweight state management engine built on React Hooks. It focuses on a clean API design without boilerplate code, bypassing React Context to prevent unnecessary rendering triggers.",
+        whyPopular: "Developers favor Zustand over Redux for its simplistic layout. Its minimal architecture is easily extendable and handles complex state operations cleanly in React environments.",
+        pros: [
+          "Virtually zero boilerplates, requiring no complex provider wraps",
+          "Bypasses React context rendering, providing high speed",
+          "Allows direct transient state updates outside components"
+        ],
+        cons: [
+          "No forced structure: requires discipline to prevent chaotic store organization",
+          "Fewer debugging dashboards compared to standard Redux DevTools"
+        ],
+        code: `import { create } from 'zustand';\n\ninterface BearStore {\n  bears: number;\n  increase: () => void;\n}\n\nexport const useBearStore = create<BearStore>((set) => ({ \n  bears: 0,\n  increase: () => set((state) => ({ bears: state.bears + 1 })),\n}));\n\n// Usage in React Component\nfunction BearWatcher() {\n  const bears = useBearStore((state) => state.bears);\n  const increase = useBearStore((state) => state.increase);\n  return <button onClick={increase}>{bears} Bears</button>;\n}`
+      },
+      {
+        id: "tailwindcss",
+        name: "Tailwind CSS",
+        category: "Frontend Styling",
+        role: "Utility CSS Framework",
+        popularity: 94,
+        link: "https://tailwindcss.com",
+        highlight: "Utility-first styling for rapid custom user interfaces.",
+        description: "Tailwind CSS provides low-level utility classes that can be composed directly in HTML markups to construct custom styling designs without writing CSS files.",
+        whyPopular: "Tailwind has redefined UI styling workflows. It speeds up layout prototyping, handles responsiveness natively, and uses compilation pipelines to output tiny, highly optimized production CSS bundles.",
+        pros: [
+          "Rapid prototyping without leaving HTML/JSX files",
+          "Consistent design system rules (spacing, colors, shadows)",
+          "Tiny CSS bundles via modern compiler class-purging"
+        ],
+        cons: [
+          "Can result in long, messy class strings in React files",
+          "Requires team training to familiarize with utility abbreviation rules"
+        ],
+        code: `<div class="max-w-md mx-auto bg-slate-900 rounded-xl overflow-hidden md:max-w-2xl border border-slate-800">\n  <div class="md:flex">\n    <div class="p-8">\n      <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Tailwind Utility</div>\n      <h2 class="block mt-1 text-lg leading-tight font-medium text-white">Rapid Styling</h2>\n      <p class="mt-2 text-slate-400">Class composition drives lightweight designs.</p>\n    </div>\n  </div>\n</div>`
+      },
+      {
+        id: "framer-motion",
+        name: "Framer Motion",
+        category: "Frontend Styling",
+        role: "Animation Library",
+        popularity: 87,
+        link: "https://framer.com/motion",
+        highlight: "Interactive and production-ready layout/interaction animations.",
+        description: "Framer Motion is a comprehensive React library that simplifies designing animations. It supports declarative physics-based motion, hover gestures, dragging, and layout transitions.",
+        whyPopular: "Framer Motion makes web pages feel alive. Developers can animate complex interactive layout adjustments dynamically with minimal setup code.",
+        pros: [
+          "Declarative animation controls that integrate with React states",
+          "Native physical transitions (springs, dampening) feel natural",
+          "Powerful exit and layout animations on component unmounting"
+        ],
+        cons: [
+          "Increases bundle script payload sizing slightly",
+          "Can degrade render performance on budget devices if overused"
+        ],
+        code: `import { motion } from 'framer-motion';\n\nexport const InteractiveCard = () => (\n  <motion.div\n    initial={{ opacity: 0, y: 20 }}\n    animate={{ opacity: 1, y: 0 }}\n    whileHover={{ scale: 1.05, shadow: "0px 10px 30px rgba(0,0,0,0.5)" }}\n    whileTap={{ scale: 0.98 }}\n    transition={{ type: "spring", stiffness: 300 }}\n    className="p-6 bg-slate-800 rounded-lg cursor-pointer"\n  >\n    <h3>Hover / Click Me!</h3>\n  </motion.div>\n);`
+      },
+      {
+        id: "chakra-ui",
+        name: "Chakra UI",
+        category: "Frontend Styling",
+        role: "Accessible UI Components",
+        popularity: 82,
+        link: "https://chakra-ui.com",
+        highlight: "Modular and accessible component library for fast styling.",
+        description: "Chakra UI is a modular React component framework that streamlines UI development by providing fully accessible, pre-styled base blocks like Buttons, Modals, and Accordions.",
+        whyPopular: "It handles accessibility (WAI-ARIA specifications) automatically, offering robust modular theme customizers and seamless dark-mode utility classes.",
+        pros: [
+          "WAI-ARIA accessible widgets out of the box",
+          "Simplified dark mode implementation and clean color systems",
+          "Prop-based styling makes styling updates quick"
+        ],
+        cons: [
+          "Bundle loading overhead from CSS-in-JS style injection",
+          "Customizing strict pre-baked layouts can occasionally feel limiting"
+        ],
+        code: `import { Box, Heading, Button, Flex, useColorMode } from '@chakra-ui/react';\n\nfunction ToggleThemeCard() {\n  const { colorMode, toggleColorMode } = useColorMode();\n  \n  return (\n    <Box p={6} bg={colorMode === 'dark' ? 'gray.800' : 'white'} borderRadius="lg">\n      <Heading size="md">Theme Configurator</Heading>\n      <Button onClick={toggleColorMode} mt={4} colorScheme="indigo">\n        Toggle {colorMode === 'light' ? 'Dark' : 'Light'}\n      </Button>\n    </Box>\n  );\n}`
+      },
+      {
+        id: "lucide-react",
+        name: "Lucide React",
+        category: "Frontend Tooling",
+        role: "Vector Icons",
+        popularity: 91,
+        link: "https://lucide.dev",
+        highlight: "Beautiful, clean, SVG-based icons for React components.",
+        description: "Lucide React is a community-driven fork of Feather Icons. It offers a catalog of clean, vector line icons formatted as native React components.",
+        whyPopular: "It provides a modern design style. It features tree-shaking support, meaning your final build folder only references icons that are explicitly imported in your code.",
+        pros: [
+          "Consistent layout design with adjustable vector variables",
+          "Lightweight implementation with robust tree-shaking capabilities",
+          "Zero configuration needed to import inline SVGs"
+        ],
+        cons: [
+          "Limited to wireframe line structures (not suitable for complex multi-color designs)"
+        ],
+        code: `import { Activity, ShieldCheck, Database, Terminal } from 'lucide-react';\n\nexport function DashboardHeader() {\n  return (\n    <header className="flex gap-4 p-4 text-white bg-slate-900">\n      <Activity className="text-cyan-400 animate-pulse" />\n      <ShieldCheck className="text-emerald-400" />\n      <Database className="text-purple-400" />\n      <Terminal className="text-rose-400" />\n    </header>\n  );\n}`
+      },
+      {
+        id: "nodejs",
+        name: "Node.js",
+        category: "Backend",
+        role: "JavaScript Runtime",
+        popularity: 94,
+        link: "https://nodejs.org",
+        highlight: "Event-driven, asynchronous JavaScript runtime for backend execution.",
+        description: "Node.js is an open-source, cross-platform runtime environment built on Chrome's V8 engine that runs JavaScript on server environments.",
+        whyPopular: "It enabled writing full-stack JavaScript. Using asynchronous non-blocking event loops, Node is highly suitable for building high-concurrency microservices, chatbots, and APIs.",
+        pros: [
+          "Uses the same language (JS/TS) for frontend and backend logic",
+          "Massive library registry (NPM) containing pre-built dependencies",
+          "Fast asynchronous performance matching low-level runtimes"
+        ],
+        cons: [
+          "Single-threaded design can struggle with high-CPU calculations",
+          "NPM dependency trees can grow bloated, introducing security updates"
+        ],
+        code: `// Express.js backend API using Node.js runtime\nimport express from 'express';\nconst app = express();\nconst PORT = process.env.PORT || 4000;\n\napp.use(express.json());\n\napp.get('/api/health', (req, res) => {\n  res.status(200).json({ status: 'OK', uptime: process.uptime() });\n});\n\napp.listen(PORT, () => {\n  console.log(\`Server is executing on port \${PORT}\`);\n});`
+      },
+      {
+        id: "nestjs",
+        name: "NestJS",
+        category: "Backend",
+        role: "Enterprise Node Framework",
+        popularity: 89,
+        link: "https://nestjs.com",
+        highlight: "Architecture-first enterprise Node.js framework (TypeScript native).",
+        description: "NestJS is a progressive Node.js framework for developing backend servers. Built with TypeScript, it enforces clear structure, grouping code blocks into Controllers, Providers, and Modules.",
+        whyPopular: "It enforces a highly structured, scalable architecture similar to Angular, making it a favorite for large enterprise development teams writing Node.js.",
+        pros: [
+          "Strict architecture constraints ensure clean code organization",
+          "Built-in TypeScript support with advanced decorators",
+          "First-class utilities for Microservices, REST, and GraphQL setups"
+        ],
+        cons: [
+          "Substantial runtime boilerplate for simple API logic",
+          "Significant learning curve for devs unfamiliar with dependency injection principles"
+        ],
+        code: `// src/cats/cats.controller.ts\nimport { Controller, Get, Post, Body } from '@nestjs/common';\n\n@Controller('cats')\nexport class CatsController {\n  @Get()\n  findAll(): string[] {\n    return ['Persian', 'Siamese', 'Maine Coon'];\n  }\n\n  @Post()\n  create(@Body() payload: { name: string }): string {\n    return \`Added cat \${payload.name}\`;\n  }\n}`
+      },
+      {
+        id: "fastapi",
+        name: "FastAPI",
+        category: "Backend",
+        role: "Python API Framework",
+        popularity: 91,
+        link: "https://fastapi.tiangolo.com",
+        highlight: "High-performance Python web framework for APIs (ASGI-compatible).",
+        description: "FastAPI is a modern, fast web framework for building APIs with Python 3.8+ using standard Python type annotations. It compiles models via Pydantic and generates documentation automatically.",
+        whyPopular: "FastAPI is the leading choice for connecting AI/ML pipelines to modern clients. It runs with speeds comparable to Node and Go while providing automatic, interactive API mock consoles.",
+        pros: [
+          "Generates interactive Swagger and ReDoc consoles automatically",
+          "Extremely fast due to ASGI baseline configurations (Starlette)",
+          "Validates request payloads natively using Python type definitions"
+        ],
+        cons: [
+          "Python ecosystem package management can feel less streamlined than Node's NPM",
+          "Synchronous database drivers require careful async wrapper configuration"
+        ],
+        code: `# main.py\nfrom fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI(title="StackSync AI Endpoint")\n\nclass PredictRequest(BaseModel):\n    prompt: str\n    max_tokens: int = 100\n\n@app.post("/predict")\nasync def run_prediction(request: PredictRequest):\n    if not request.prompt:\n        raise HTTPException(status_code=400, detail="Prompt is empty")\n    # Dynamic AI inference simulation\n    return {"result": f"Generated tokens for: {request.prompt}", "status": "success"}`
+      },
+      {
+        id: "postgresql",
+        name: "PostgreSQL",
+        category: "Database",
+        role: "Relational Database",
+        popularity: 93,
+        link: "https://www.postgresql.org",
+        highlight: "Object-relational database with high extensibility and SQL support.",
+        description: "PostgreSQL is an advanced, enterprise-grade relational database system. It supports both SQL and JSON querying, maintaining high ACID transactional compliance and scaling reliably.",
+        whyPopular: "PostgreSQL is the industry relational standard. Its pgvector extension supports AI applications by storing and performing calculations on high-dimensional vector embeddings directly inside tables.",
+        pros: [
+          "Highly resilient transactional security and integrity",
+          "Robust extensions catalogue supporting Vectors (pgvector) and GIS maps",
+          "Excellent index scanning algorithms for massive relational queries"
+        ],
+        cons: [
+          "Requires careful performance configuration for highly continuous write volumes",
+          "Horizontal clustering and master-slave setups are complex to maintain"
+        ],
+        code: `-- Initialize pgvector and query embeddings\nCREATE EXTENSION IF NOT EXISTS pgvector;\n\nCREATE TABLE app_embeddings (\n  id SERIAL PRIMARY KEY,\n  tech_name VARCHAR(50),\n  embedding vector(1536) -- Stores OpenAI text-embedding-3 vectors\n);\n\n-- Find closest tech matching query vector\nSELECT tech_name, 1 - (embedding <=> '[0.012,-0.023,...]') AS similarity\nFROM app_embeddings\nORDER BY similarity DESC\nLIMIT 3;`
+      },
+      {
+        id: "mongodb",
+        name: "MongoDB",
+        category: "Database",
+        role: "NoSQL Document Database",
+        popularity: 89,
+        link: "https://www.mongodb.com",
+        highlight: "Flexible document database using dynamic JSON-like schemas.",
+        description: "MongoDB is a document-oriented database classified as NoSQL. Instead of tables and rows, it stores datasets in dynamic collections of JSON-like BSON documents.",
+        whyPopular: "MongoDB is highly popular for rapid prototyping and apps handling polymorphous or unstructured data models (like catalog details or real-time event feeds) without requiring rigid migrations.",
+        pros: [
+          "Flexible document schemas support fast iterative changes",
+          "High horizontal scaling potential via native sharding features",
+          "Intuitive document query syntax feels natural to JS/TS developers"
+        ],
+        cons: [
+          "Does not support complex multi-table joins natively",
+          "Consumes more RAM memory capacity compared to lightweight relational engines"
+        ],
+        code: `// Express server querying MongoDB database\nimport mongoose from 'mongoose';\n\nconst userSchema = new mongoose.Schema({\n  name: String,\n  email: { type: String, unique: true },\n  createdAt: { type: Date, default: Date.now }\n});\n\nconst User = mongoose.model('User', userSchema);\n\napp.get('/api/users', async (req, res) => {\n  const users = await User.find({ name: /senthil/i });\n  res.json(users);\n});`
+      },
+      {
+        id: "redis",
+        name: "Redis",
+        category: "Database",
+        role: "In-Memory Cache Store",
+        popularity: 92,
+        link: "https://redis.io",
+        highlight: "Sub-millisecond latency key-value caching database.",
+        description: "Redis is an in-memory data structure store used as a database, cache, message broker, and queuing engine. It operates completely inside computer RAM memory.",
+        whyPopular: "Redis is vital for high-speed apps. It performs operations in microseconds, serving as the default tool for API rate-limiting, active user session records, and shared data caching.",
+        pros: [
+          "Extremely rapid read/write performance (sub-millisecond)",
+          "Supports specialized structures like hashes, sorted sets, and pub/sub channels",
+          "Configurable time-to-live (TTL) handles automatic cache eviction"
+        ],
+        cons: [
+          "Limited by total size of available physical RAM memory",
+          "Requires secondary persistence strategies for long-term durable records"
+        ],
+        code: `// Querying and writing cache values in Redis\nimport { createClient } from 'redis';\nconst client = createClient();\nawait client.connect();\n\n// Write profile cache with a 1-hour expiration limit\nawait client.setEx('user:profile:1001', 3600, JSON.stringify(userData));\n\n// Fetch direct cache profile\nconst cacheVal = await client.get('user:profile:1001');`
+      },
+      {
+        id: "apis",
+        name: "APIs & Protocols",
+        category: "API Layer",
+        role: "Client-Server Interface",
+        popularity: 96,
+        link: "https://developer.mozilla.org/en-US/docs/Web/API",
+        highlight: "Standardized methods (REST, GraphQL, gRPC) for system connection.",
+        description: "APIs establish structured formats that define how web clients request and pull files and datasets from backends, using models like REST endpoints, GraphQL queries, or gRPC binary streams.",
+        whyPopular: "Modern application designs are entirely API-driven. Architectures combine REST for simple resources, GraphQL to fetch specific schemas, and gRPC to secure blazing microservice synchronization.",
+        pros: [
+          "Decouples client rendering from server backend business rules",
+          "Allows building specialized microservice blocks that interact securely",
+          "Simplifies scaling applications across Web, iOS, and Android platforms"
+        ],
+        cons: [
+          "Increases network security exposure without strict gateway validation rules",
+          "Requires careful version tracking to avoid breaking running clients"
+        ],
+        code: `// Example GraphQL Schema definitions\ntype TechItem {\n  id: ID!\n  name: String!\n  category: String!\n  popularity: Int!\n}\n\ntype Query {\n  getTechItems(category: String): [TechItem]!\n  getTechById(id: ID!): TechItem\n}\n\n// Query sent by React Client:\n// query { getTechItems(category: "Backend") { name popularity } }`
+      }
+    ];
+
+    // No blueprint configuration state
+
+    // DOM References
+    const categoryTabs = document.getElementById("category-tabs");
+    const techTableBody = document.getElementById("tech-table-body");
+    const gridViewContainer = document.getElementById("grid-view");
+    const tableViewContainer = document.getElementById("table-view");
+    const viewTableBtn = document.getElementById("view-table-btn");
+    const viewGridBtn = document.getElementById("view-grid-btn");
+    const resultCountText = document.getElementById("result-count");
+    
+    // Modal References
+    const techModal = document.getElementById("tech-modal");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+    const modalTechIcon = document.getElementById("modal-tech-icon");
+    const modalTechTitle = document.getElementById("modal-tech-title");
+    const modalTechBadge = document.getElementById("modal-tech-badge");
+    const modalTechDesc = document.getElementById("modal-tech-desc");
+    const modalPopularityText = document.getElementById("modal-popularity-text");
+    const modalPopularityBar = document.getElementById("modal-popularity-bar");
+    const modalPopularityPercentage = document.getElementById("modal-popularity-percentage");
+    const modalProsList = document.getElementById("modal-pros-list");
+    const modalConsList = document.getElementById("modal-cons-list");
+    const modalCodeBody = document.getElementById("modal-code-body");
+    const modalCodeLang = document.getElementById("modal-code-lang");
+    const modalCopyCodeBtn = document.getElementById("modal-copy-code-btn");
+    const modalTechLink = document.getElementById("modal-tech-link");
+
+    // No playground references
+    
+    // Active filters state
+    let currentFilter = "all";
+    let activeView = "table"; // 'table' or 'grid'
+
+    // Initial load
+    window.addEventListener("DOMContentLoaded", () => {
+      renderCounters();
+      renderDirectory();
+      setupEventListeners();
+    });
+
+    // Render Stats Headers
+    function renderCounters() {
+      const frontendItems = techStack.filter(item => item.category.startsWith("Frontend")).length;
+      const backendItems = techStack.filter(item => item.category === "Backend").length;
+      const dbApiItems = techStack.filter(item => item.category === "Database" || item.category === "API Layer").length;
+
+      document.getElementById("count-frontend").textContent = frontendItems;
+      document.getElementById("count-backend").textContent = backendItems;
+      document.getElementById("count-db-api").textContent = dbApiItems;
+    }
+
+    // Render Table and Grid Lists
+    function renderDirectory() {
+      const filteredData = techStack.filter(item => {
+        let matchesCategory = false;
+        if (currentFilter === "all") {
+          matchesCategory = true;
+        } else if (currentFilter === "Frontend Layer") {
+          matchesCategory = item.category.startsWith("Frontend");
+        } else if (currentFilter === "Backend Layer") {
+          matchesCategory = item.category === "Backend";
+        } else if (currentFilter === "Database & APIs") {
+          matchesCategory = item.category === "Database" || item.category === "API Layer";
+        } else {
+          matchesCategory = item.category === currentFilter;
+        }
+
+        return matchesCategory;
+      });
+
+      resultCountText.textContent = `Showing ${filteredData.length} of ${techStack.length} items`;
+
+      // Render Table View
+      techTableBody.innerHTML = filteredData.map(item => {
+        let tagClass = "tag-other";
+        if (item.category.startsWith("Frontend")) tagClass = "tag-frontend";
+        else if (item.category === "Backend") tagClass = "tag-backend";
+        else if (item.category === "Database") tagClass = "tag-database";
+
+        return `
+          <tr>
+            <td>
+              <div class="tech-name-cell">
+                <div class="tech-icon-circle">${item.name.charAt(0)}</div>
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="tech-link">${item.name} <i data-lucide="external-link" size="12" style="opacity: 0.5;"></i></a>
+              </div>
+            </td>
+            <td><span class="tag ${tagClass}">${item.category}</span></td>
+            <td style="color: var(--text-secondary);">${item.role}</td>
+            <td>
+              <div class="popularity-bar-container">
+                <div class="popularity-bar" style="width: ${item.popularity}%;"></div>
+              </div>
+              <span class="popularity-val">${item.popularity}%</span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                <button class="action-btn" onclick="openDetails('${item.id}')" title="View details & code">
+                  <i data-lucide="info" size="14"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render Grid View
+      gridViewContainer.innerHTML = filteredData.map(item => {
+        let tagClass = "tag-other";
+        if (item.category.startsWith("Frontend")) tagClass = "tag-frontend";
+        else if (item.category === "Backend") tagClass = "tag-backend";
+        else if (item.category === "Database") tagClass = "tag-database";
+
+        return `
+          <div class="tech-card" onclick="openDetails('${item.id}')">
+            <div>
+              <div class="card-header">
+                <div>
+                  <div class="card-title">
+                    <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="tech-link" onclick="event.stopPropagation();">${item.name} <i data-lucide="external-link" size="12" style="opacity: 0.5;"></i></a>
+                  </div>
+                  <span class="tag ${tagClass}">${item.category}</span>
+                </div>
+                <div class="tech-icon-circle" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                  ${item.name.charAt(0)}
+                </div>
+              </div>
+              <div class="card-body">
+                ${item.highlight}
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <i data-lucide="trending-up" size="12" style="color: var(--secondary)"></i>
+                <span class="popularity-val" style="font-size: 0.75rem;">${item.popularity}% rating</span>
+              </div>
+              <!-- No blueprint button -->
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Refresh Lucide Icons in table/grid
+      lucide.createIcons();
+    }
+
+    // Set up tabs and event listeners
+    function setupEventListeners() {
+      // Category tab clicking
+      categoryTabs.addEventListener("click", (e) => {
+        const tab = e.target.closest(".tab-item");
+        if (!tab) return;
+        
+        document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".stat-badge").forEach(el => el.classList.remove("active"));
+        tab.classList.add("active");
+        
+        currentFilter = tab.getAttribute("data-category");
+        renderDirectory();
+      });
+
+      // Stats badges clicking
+      const badgeFrontend = document.getElementById("badge-frontend");
+      const badgeBackend = document.getElementById("badge-backend");
+      const badgeDbApi = document.getElementById("badge-db-api");
+
+      function handleBadgeClick(badgeId, filterVal) {
+        const badge = document.getElementById(badgeId);
+        const isActive = badge.classList.contains("active");
+
+        document.querySelectorAll(".stat-badge").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+
+        if (isActive) {
+          currentFilter = "all";
+          document.querySelector('[data-category="all"]').classList.add("active");
+        } else {
+          badge.classList.add("active");
+          currentFilter = filterVal;
+        }
+
+        renderDirectory();
+      }
+
+      badgeFrontend.addEventListener("click", () => handleBadgeClick("badge-frontend", "Frontend Layer"));
+      badgeBackend.addEventListener("click", () => handleBadgeClick("badge-backend", "Backend Layer"));
+      badgeDbApi.addEventListener("click", () => handleBadgeClick("badge-db-api", "Database & APIs"));
+
+      // No search typing listener
+
+      // View switcher buttons
+      viewTableBtn.addEventListener("click", () => {
+        viewTableBtn.classList.add("active");
+        viewGridBtn.classList.remove("active");
+        tableViewContainer.classList.remove("hidden");
+        gridViewContainer.classList.add("hidden");
+        activeView = "table";
+      });
+
+      viewGridBtn.addEventListener("click", () => {
+        viewGridBtn.classList.add("active");
+        viewTableBtn.classList.remove("active");
+        gridViewContainer.classList.remove("hidden");
+        tableViewContainer.classList.add("hidden");
+        activeView = "grid";
+        lucide.createIcons();
+      });
+
+      // Close modal
+      closeModalBtn.addEventListener("click", closeModal);
+      techModal.addEventListener("click", (e) => {
+        if (e.target === techModal) closeModal();
+      });
+
+      // Copy Code Action
+      modalCopyCodeBtn.addEventListener("click", () => {
+        const codeText = modalCodeBody.textContent;
+        navigator.clipboard.writeText(codeText).then(() => {
+          showToast("Code copied to clipboard!");
+        });
+      });
+
+      // No simulator listeners
+    }
+
+    // Removed blueprint functions
+
+    // Open detail modal with full technical data
+    window.openDetails = function(techId) {
+      const item = techStack.find(i => i.id === techId);
+      if (!item) return;
+
+      modalTechIcon.textContent = item.name.substring(0,2);
+      modalTechTitle.textContent = item.name;
+      modalTechLink.href = item.link;
+      modalTechDesc.textContent = item.description;
+      modalPopularityText.textContent = item.whyPopular;
+      modalPopularityPercentage.textContent = `${item.popularity}%`;
+      modalPopularityBar.style.width = `${item.popularity}%`;
+
+      // Set category badge class
+      let badgeClass = "tag-other";
+      if (item.category.startsWith("Frontend")) badgeClass = "tag-frontend";
+      else if (item.category === "Backend") badgeClass = "tag-backend";
+      else if (item.category === "Database") badgeClass = "tag-database";
+      modalTechBadge.className = `tag ${badgeClass}`;
+      modalTechBadge.textContent = item.category;
+
+      // Pros List
+      modalProsList.innerHTML = item.pros.map(pro => `
+        <div class="pro-item">
+          <i data-lucide="check" size="14"></i>
+          <span>${pro}</span>
+        </div>
+      `).join('');
+
+      // Cons List
+      modalConsList.innerHTML = item.cons.map(con => `
+        <div class="con-item">
+          <i data-lucide="alert-triangle" size="14"></i>
+          <span>${con}</span>
+        </div>
+      `).join('');
+
+      // Code Setup
+      modalCodeBody.textContent = item.code;
+      
+      // Determine file extension text
+      let codeExt = "javascript";
+      if (item.id === "postgresql") codeExt = "sql";
+      else if (item.id === "fastapi") codeExt = "python";
+      else if (item.id === "nextjs" || item.id === "zustand") codeExt = "typescript";
+      modalCodeLang.textContent = codeExt.toUpperCase();
+
+      techModal.classList.add("open");
+      lucide.createIcons();
+    };
+
+    function closeModal() {
+      techModal.classList.remove("open");
+    }
+
+    // Removed console logging helpers
+
+    // Toast Toast popup helper
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const msgEl = document.getElementById("toast-message");
+      msgEl.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    // Removed simulation and SVG helpers
+
+    // Theme Switching Engine
+    const themeToggleBtn = document.getElementById("theme-toggle-btn");
+    
+    // Check saved settings
+    const savedTheme = localStorage.getItem("theme");
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    
+    if (savedTheme === "light" || (!savedTheme && prefersLight)) {
+      enableLightMode();
+    } else {
+      enableDarkMode();
+    }
+    
+    themeToggleBtn.addEventListener("click", () => {
+      if (document.body.classList.contains("light-mode")) {
+        enableDarkMode();
+      } else {
+        enableLightMode();
+      }
+    });
+    
+    function enableLightMode() {
+      document.body.classList.add("light-mode");
+      themeToggleBtn.textContent = "☀️";
+      localStorage.setItem("theme", "light");
+    }
+    
+    function enableDarkMode() {
+      document.body.classList.remove("light-mode");
+      themeToggleBtn.textContent = "🌙";
+      localStorage.setItem("theme", "dark");
+    }
+  </script>
+</body>
+</html>
