@@ -226,11 +226,17 @@
 
     /* Global Layout Container */
     .container {
-      max-width: 1400px;
+      max-width: 100%;
       margin: 0 auto;
       padding: 2rem;
       position: relative;
       z-index: 1;
+      box-sizing: border-box;
+    }
+    @media (min-width: 1200px) {
+      .container {
+        padding: 2rem 4rem;
+      }
     }
 
     /* Header Section */
@@ -402,7 +408,7 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--panel-border);
-      padding: 0 1rem 0 2.75rem;
+      padding: 0 2.5rem 0 1.25rem;
       height: 42px;
       box-sizing: border-box;
       border-radius: 10px;
@@ -416,6 +422,28 @@
       border-color: var(--primary);
       box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
       background: rgba(255, 255, 255, 0.07);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .search-clear-btn:hover {
+      color: var(--accent);
+      background: rgba(244, 63, 94, 0.1);
     }
 
     .search-container i {
@@ -509,13 +537,41 @@
     }
 
     th {
-      color: var(--text-secondary);
+      color: var(--text-primary);
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-weight: 600;
-      padding: 1rem;
-      border-bottom: 1px solid var(--panel-border);
+      font-weight: 700;
+      padding: 1.1rem 1rem;
+      border-bottom: 2px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.03);
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    body.light-mode th {
+      background: rgba(0, 0, 0, 0.02);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+    }
+
+    th.sortable-header {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable-header:hover {
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    body.light-mode th.sortable-header:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .sort-icon {
+      display: inline-flex;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+      color: var(--primary);
     }
 
     tr {
@@ -1026,6 +1082,103 @@
 
     .modal-overlay.open .modal-card {
       transform: scale(1) translateY(0);
+    }
+
+    /* Slide-out Drawer Overrides for Detail Modal */
+    #tech-modal.modal-overlay {
+      justify-content: flex-end;
+      align-items: stretch;
+      background: rgba(15, 23, 42, 0.2);
+      backdrop-filter: blur(4px);
+      z-index: 150;
+    }
+
+    #tech-modal .modal-card {
+      height: 100vh;
+      max-height: 100vh;
+      width: 550px;
+      max-width: 100vw;
+      border-radius: 20px 0 0 20px;
+      border-right: none;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(41, 44, 60, 0.85);
+      backdrop-filter: blur(25px);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
+    }
+
+    body.light-mode #tech-modal .modal-card {
+      background: rgba(255, 255, 255, 0.94);
+      border-left: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+    }
+
+    #tech-modal.modal-overlay.open .modal-card {
+      transform: translateX(0);
+    }
+
+    /* Single column inside the drawer body to fit narrow layout */
+    #tech-modal .modal-meta-grid,
+    #tech-modal .pros-cons-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    /* Table modifications for clickability & dense inline fields */
+    #tech-table-body tr {
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    /* Active selected row styling */
+    #tech-table-body tr.active-row-highlight {
+      background: rgba(202, 158, 230, 0.12) !important;
+    }
+    body.light-mode #tech-table-body tr.active-row-highlight {
+      background: rgba(99, 102, 241, 0.08) !important;
+    }
+
+    #tech-table-body tr.active-row-highlight td:first-child {
+      position: relative;
+    }
+    #tech-table-body tr.active-row-highlight td:first-child::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+    }
+
+    /* Inline Table Cells styling */
+    .table-summary-cell {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      max-width: 250px;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .strength-badge-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .strength-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.2;
+    }
+
+    .strength-badge i {
+      color: var(--success);
+      flex-shrink: 0;
     }
 
     .modal-header {
@@ -1695,6 +1848,301 @@
     .compare-run-btn.enabled:active {
       transform: translateY(0) scale(0.98);
     }
+
+    #analyze-stack-btn.enabled {
+      background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%) !important;
+      border: none !important;
+      color: #232634 !important;
+      cursor: pointer !important;
+      opacity: 1 !important;
+      box-shadow: 0 4px 15px rgba(166, 209, 137, 0.35) !important;
+    }
+
+    body.light-mode #analyze-stack-btn.enabled {
+      background: linear-gradient(135deg, #16a34a 0%, #0891b2 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 15px rgba(22, 163, 74, 0.25) !important;
+    }
+
+    #analyze-stack-btn.enabled:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(166, 209, 137, 0.5) !important;
+    }
+
+    #analyze-stack-btn.enabled:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Responsiveness Rules for Mobile and Tablet Viewports */
+    @media (max-width: 1024px) {
+      /* Hide Summary column in table view on tablets */
+      #table-view th:nth-child(4), 
+      #table-view td:nth-child(4) {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Hide Primary Strengths and Ecosystem Role in table view on mobile */
+      #table-view th:nth-child(3), 
+      #table-view td:nth-child(3),
+      #table-view th:nth-child(5),
+      #table-view td:nth-child(5) {
+        display: none !important;
+      }
+      
+      /* Stack controls wrapper items vertically on mobile */
+      .controls-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      
+      #category-tabs {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        order: -1; /* Place filter tabs at top of section on mobile */
+      }
+      
+      .view-toggle {
+        margin-left: 0 !important;
+        justify-content: center;
+      }
+      
+      #result-count {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Adapt slide-out details drawer to full-screen on small screens */
+      #tech-modal .modal-card {
+        width: 100vw;
+        border-radius: 0;
+      }
+    }
+      
+    /* Stack Analyzer & Architecture Scoring Styles */
+    .analyzer-modal-card {
+      width: 95%;
+      max-width: 1100px;
+      max-height: 90vh;
+    }
+    .analyzer-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 800px) {
+      .analyzer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    .score-gauge-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 2rem 1rem;
+    }
+    body.light-mode .score-gauge-container {
+      background: rgba(0, 0, 0, 0.01);
+    }
+    .score-circle-svg {
+      transform: rotate(-90deg);
+    }
+    .score-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.06);
+      stroke-width: 8;
+    }
+    body.light-mode .score-circle-bg {
+      stroke: rgba(0, 0, 0, 0.05);
+    }
+    .score-circle-fg {
+      fill: none;
+      stroke-width: 8;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease;
+    }
+    .score-text-overlay {
+      position: absolute;
+      top: 48px; /* Centered vertically relative to the SVG circle offset */
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-percentage {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .score-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+    .analyzer-inventory {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    body.light-mode .analyzer-inventory {
+      background: rgba(0, 0, 0, 0.02);
+    }
+    .inventory-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+    .inventory-chip {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--panel-border);
+      color: var(--text-secondary);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    body.light-mode .inventory-chip {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .analyzer-reports {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      overflow-y: auto;
+      max-height: 68vh;
+      padding-right: 0.75rem;
+      scrollbar-width: thin;
+    }
+    .analyzer-section {
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 1.5rem;
+    }
+    .analyzer-section:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .analyzer-section h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .analyzer-section.frontend h4 { color: var(--secondary); }
+    .analyzer-section.backend h4 { color: var(--accent); }
+    .analyzer-section.database h4 { color: var(--success); }
+
+    .status-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-badge.success-badge {
+      background: rgba(166, 209, 137, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(166, 209, 137, 0.2);
+    }
+    body.light-mode .status-badge.success-badge {
+      background: rgba(166, 209, 137, 0.06);
+    }
+    .status-badge.danger-badge {
+      background: rgba(231, 130, 132, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(231, 130, 132, 0.2);
+    }
+    body.light-mode .status-badge.danger-badge {
+      background: rgba(231, 130, 132, 0.06);
+    }
+    
+    .analyzer-section p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .verdict-box {
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .verdict-box.verdict-success {
+      background: rgba(166, 209, 137, 0.08);
+      border: 1px solid rgba(166, 209, 137, 0.2);
+      color: var(--success);
+    }
+    body.light-mode .verdict-box.verdict-success {
+      background: rgba(166, 209, 137, 0.04);
+    }
+    .verdict-box.verdict-warning {
+      background: rgba(239, 159, 118, 0.08);
+      border: 1px solid rgba(239, 159, 118, 0.2);
+      color: #ef9f76;
+    }
+    body.light-mode .verdict-box.verdict-warning {
+      background: rgba(217, 119, 6, 0.04);
+      color: #b45309;
+    }
+    .verdict-box.verdict-danger {
+      background: rgba(231, 130, 132, 0.08);
+      border: 1px solid rgba(231, 130, 132, 0.2);
+      color: var(--accent);
+    }
+    body.light-mode .verdict-box.verdict-danger {
+      background: rgba(231, 130, 132, 0.04);
+    }
+    .verdict-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .verdict-text {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin: 0;
+    }
   </style>
 </head>
 <body>
@@ -1717,7 +2165,13 @@
     <!-- Top Header -->
     <header>
       <h1>Interactive Tech Stack Guide</h1>
-      <p>An educational companion detailing modern Frontend, Backend, Database, and API components.</p>
+      
+      <div class="search-container" style="max-width: 500px; margin: 1.5rem auto 2rem auto; position: relative;">
+        <input type="text" class="search-input" id="search-input" placeholder="Search tech name, category, role, or strengths...">
+        <button class="search-clear-btn" id="search-clear-btn" style="display: none;" title="Clear search text">
+          <i data-lucide="x" size="16"></i>
+        </button>
+      </div>
       
       <div class="stats-bar">
         <div class="stat-badge" id="badge-frontend" title="Click to filter by Frontend components">
@@ -1748,6 +2202,17 @@
         <div class="controls-wrapper">
           <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); min-width: max-content;" id="result-count">Showing all items</span>
           
+          <!-- Filter tabs -->
+          <div class="tabs-wrapper" id="category-tabs" style="margin-bottom: 0; margin-left: 2rem; margin-right: 2rem; flex-grow: 1; justify-content: center;">
+            <div class="tab-item active" data-category="all">All Ecosystems</div>
+            <div class="tab-item" data-category="Frontend">Frontend Core</div>
+            <div class="tab-item" data-category="Frontend Styling">UI & Animations</div>
+            <div class="tab-item" data-category="Frontend State">State Management</div>
+            <div class="tab-item" data-category="Backend">Backend Services</div>
+            <div class="tab-item" data-category="Database">Databases</div>
+            <div class="tab-item" data-category="API Layer">API Protocols</div>
+          </div>
+          
           <div class="view-toggle" style="margin-left: auto;">
             <button class="toggle-btn active" id="view-table-btn" title="Table View">
               <i data-lucide="table" size="16"></i>
@@ -1760,27 +2225,18 @@
           </div>
         </div>
 
-        <!-- Filter tabs -->
-        <div class="tabs-wrapper" id="category-tabs">
-          <div class="tab-item active" data-category="all">All Ecosystems</div>
-          <div class="tab-item" data-category="Frontend">Frontend Core</div>
-          <div class="tab-item" data-category="Frontend Styling">UI & Animations</div>
-          <div class="tab-item" data-category="Frontend State">State Management</div>
-          <div class="tab-item" data-category="Backend">Backend Services</div>
-          <div class="tab-item" data-category="Database">Databases</div>
-          <div class="tab-item" data-category="API Layer">API Protocols</div>
-        </div>
-
         <!-- Table View Structure -->
         <div class="table-container" id="table-view">
           <table>
             <thead>
               <tr>
-                <th>Technology</th>
-                <th>Category</th>
-                <th>Ecosystem Role</th>
-                <th>Popularity</th>
-                <th style="width: 80px; text-align: center;">Actions</th>
+                <th class="sortable-header" onclick="handleSort('name')">Technology <span id="sort-icon-name"></span></th>
+                <th class="sortable-header" onclick="handleSort('category')">Category <span id="sort-icon-category"></span></th>
+                <th class="sortable-header" onclick="handleSort('role')">Ecosystem Role <span id="sort-icon-role"></span></th>
+                <th>Summary</th>
+                <th>Primary Strengths</th>
+                <th class="sortable-header" onclick="handleSort('popularity')">Popularity <span id="sort-icon-popularity"></span></th>
+                <th style="width: 100px; text-align: center;">Actions</th>
               </tr>
             </thead>
             <tbody id="tech-table-body">
@@ -1930,6 +2386,10 @@
         <button class="compare-run-btn" id="compare-run-btn" disabled>
           <span>Compare Stack</span>
         </button>
+        <button class="compare-run-btn" id="analyze-stack-btn" disabled style="background: rgba(166, 209, 137, 0.1); border: 1px solid rgba(166, 209, 137, 0.2); color: var(--success); cursor: not-allowed; opacity: 0.6; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <i data-lucide="bar-chart-3" size="14"></i>
+          <span>Analyze Stack</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1953,8 +2413,91 @@
     </div>
   </div>
 
+  <!-- Stack Analyzer Modal -->
+  <div class="modal-overlay" id="analyzer-modal">
+    <div class="modal-card analyzer-modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="bar-chart-3" style="color: var(--primary);"></i>
+          <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem;">Architectural Stack Analyzer</h2>
+        </div>
+        <button class="close-modal-btn" id="close-analyzer-modal-btn" aria-label="Close modal">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="analyzer-grid">
+          <!-- Left Column: Gauge and Selected Techs -->
+          <div>
+            <div class="score-gauge-container">
+              <svg class="score-circle-svg" width="120" height="120">
+                <circle class="score-circle-bg" cx="60" cy="60" r="45" fill="none"></circle>
+                <circle class="score-circle-fg" id="analyzer-score-circle" cx="60" cy="60" r="45" fill="none"></circle>
+              </svg>
+              <div class="score-text-overlay">
+                <span class="score-percentage" id="analyzer-score-val">0%</span>
+                <span class="score-label">Score</span>
+              </div>
+            </div>
+            
+            <div class="analyzer-inventory">
+              <span class="modal-section-title" style="margin-bottom: 0.5rem; display: block;">Selected Stack</span>
+              <div class="inventory-chips" id="analyzer-inventory-chips">
+                <!-- JS Injected Chips -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column: Detailed Architecture Reports -->
+          <div class="analyzer-reports">
+            <!-- Verdict Banner -->
+            <div class="verdict-box" id="analyzer-verdict-box">
+              <div class="verdict-title">
+                <i id="analyzer-verdict-icon" data-lucide="help-circle"></i>
+                <span id="analyzer-verdict-title">Verdict</span>
+              </div>
+              <p class="verdict-text" id="analyzer-verdict-desc"></p>
+            </div>
+            
+            <!-- Frontend Layer Report -->
+            <div class="analyzer-section frontend">
+              <h4>
+                <i data-lucide="layout"></i>
+                <span>Frontend Layer</span>
+                <span id="analyzer-status-frontend"></span>
+              </h4>
+              <p id="analyzer-report-frontend"></p>
+            </div>
+            
+            <!-- Backend Layer Report -->
+            <div class="analyzer-section backend">
+              <h4>
+                <i data-lucide="server"></i>
+                <span>Backend Layer</span>
+                <span id="analyzer-status-backend"></span>
+              </h4>
+              <p id="analyzer-report-backend"></p>
+            </div>
+            
+            <!-- Database & Cache Report -->
+            <div class="analyzer-section database">
+              <h4>
+                <i data-lucide="database"></i>
+                <span>Database & Cache Layer</span>
+                <span id="analyzer-status-database"></span>
+              </h4>
+              <p id="analyzer-report-database"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Client-side Logic Script -->
   <script>
+
     // Tech Stack database
     const techStack = [
       {
@@ -2281,6 +2824,7 @@
     const viewTableBtn = document.getElementById("view-table-btn");
     const viewGridBtn = document.getElementById("view-grid-btn");
     const resultCountText = document.getElementById("result-count");
+    const searchInput = document.getElementById("search-input");
     
     // Comparison State variables
     let selectedCompareItems = [];
@@ -2304,9 +2848,12 @@
 
     // No playground references
     
-    // Active filters state
+    // Active filters and sort state
     let currentFilter = "all";
     let activeView = "table"; // 'table' or 'grid'
+    let activeDetailsId = null;
+    let sortColumn = null;
+    let sortDirection = "asc"; // 'asc' or 'desc'
 
     // Initial load
     window.addEventListener("DOMContentLoaded", () => {
@@ -2328,6 +2875,8 @@
 
     // Render Table and Grid Lists
     function renderDirectory() {
+      const searchText = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
       const filteredData = techStack.filter(item => {
         let matchesCategory = false;
         if (currentFilter === "all") {
@@ -2342,7 +2891,48 @@
           matchesCategory = item.category === currentFilter;
         }
 
-        return matchesCategory;
+        let matchesSearch = true;
+        if (searchText) {
+          matchesSearch = item.name.toLowerCase().includes(searchText) ||
+                          item.category.toLowerCase().includes(searchText) ||
+                          item.role.toLowerCase().includes(searchText) ||
+                          item.highlight.toLowerCase().includes(searchText) ||
+                          item.description.toLowerCase().includes(searchText) ||
+                          item.pros.some(p => p.toLowerCase().includes(searchText));
+        }
+
+        return matchesCategory && matchesSearch;
+      });
+
+      // Sort the filtered data if a column is selected
+      if (sortColumn) {
+        filteredData.sort((a, b) => {
+          let valA = a[sortColumn];
+          let valB = b[sortColumn];
+
+          if (typeof valA === "string") {
+            valA = valA.toLowerCase();
+            valB = valB.toLowerCase();
+          }
+
+          if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+          if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+          return 0;
+        });
+      }
+
+      // Update sort icons in table headers
+      const columns = ["name", "category", "role", "popularity"];
+      columns.forEach(col => {
+        const iconEl = document.getElementById(`sort-icon-${col}`);
+        if (iconEl) {
+          if (sortColumn === col) {
+            const iconName = sortDirection === "asc" ? "chevron-up" : "chevron-down";
+            iconEl.innerHTML = `<i data-lucide="${iconName}" class="sort-icon" size="14"></i>`;
+          } else {
+            iconEl.innerHTML = "";
+          }
+        }
       });
 
       resultCountText.textContent = `Showing ${filteredData.length} of ${techStack.length} items`;
@@ -2354,16 +2944,31 @@
         else if (item.category === "Backend") tagClass = "tag-backend";
         else if (item.category === "Database") tagClass = "tag-database";
 
+        const strengthsHtml = item.pros.slice(0, 2).map(pro => {
+          return `
+            <div class="strength-badge">
+              <i data-lucide="check" size="12"></i>
+              <span>${pro}</span>
+            </div>
+          `;
+        }).join('');
+
         return `
-          <tr>
+          <tr onclick="openDetails('${item.id}')" id="row-${item.id}">
             <td>
               <div class="tech-name-cell">
                 <div class="tech-icon-circle">${item.name.charAt(0)}</div>
-                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="tech-link">${item.name}</a>
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="tech-link" onclick="event.stopPropagation();">${item.name}</a>
               </div>
             </td>
             <td><span class="tag ${tagClass}">${item.category}</span></td>
             <td style="color: var(--text-secondary);">${item.role}</td>
+            <td class="table-summary-cell">${item.highlight}</td>
+            <td>
+              <div class="strength-badge-container">
+                ${strengthsHtml}
+              </div>
+            </td>
             <td>
               <div class="popularity-bar-container">
                 <div class="popularity-bar" style="width: ${item.popularity}%;"></div>
@@ -2371,7 +2976,7 @@
               <span class="popularity-val">${item.popularity}%</span>
             </td>
             <td>
-              <div style="display: flex; gap: 0.5rem; justify-content: center;">
+              <div style="display: flex; gap: 0.5rem; justify-content: center;" onclick="event.stopPropagation();">
                 <button class="action-btn" onclick="openDetails('${item.id}')" title="View details & code">
                   <i data-lucide="info" size="14"></i>
                 </button>
@@ -2429,6 +3034,14 @@
         highlightRowAndCard(id, true);
       });
 
+      // Re-apply active row highlight if drawer is open
+      if (activeDetailsId) {
+        const activeRow = document.getElementById(`row-${activeDetailsId}`);
+        if (activeRow) {
+          activeRow.classList.add("active-row-highlight");
+        }
+      }
+
       // Refresh Lucide Icons in table/grid
       lucide.createIcons();
     }
@@ -2475,7 +3088,29 @@
       badgeBackend.addEventListener("click", () => handleBadgeClick("badge-backend", "Backend Layer"));
       badgeDbApi.addEventListener("click", () => handleBadgeClick("badge-db-api", "Database & APIs"));
 
-      // No search typing listener
+      // Search input typing listener
+      const searchClearBtn = document.getElementById("search-clear-btn");
+      if (searchInput && searchClearBtn) {
+        searchInput.addEventListener("input", () => {
+          toggleSearchClearBtn();
+          renderDirectory();
+        });
+
+        searchClearBtn.addEventListener("click", () => {
+          searchInput.value = "";
+          toggleSearchClearBtn();
+          renderDirectory();
+          searchInput.focus();
+        });
+
+        function toggleSearchClearBtn() {
+          if (searchInput.value.trim().length > 0) {
+            searchClearBtn.style.display = "flex";
+          } else {
+            searchClearBtn.style.display = "none";
+          }
+        }
+      }
 
       // Floating Comparison Bar clear button
       const compareClearBtn = document.getElementById("compare-clear-btn");
@@ -2496,6 +3131,29 @@
       compareModal.addEventListener("click", (e) => {
         if (e.target === compareModal) closeCompareModal();
       });
+
+      // Stack Analyzer modal triggers
+      const analyzeStackBtn = document.getElementById("analyze-stack-btn");
+      const closeAnalyzerModalBtn = document.getElementById("close-analyzer-modal-btn");
+      const analyzerModal = document.getElementById("analyzer-modal");
+
+      if (analyzeStackBtn) {
+        analyzeStackBtn.addEventListener("click", () => {
+          if (selectedCompareItems.length >= 1) {
+            openAnalyzerModal();
+          }
+        });
+      }
+
+      if (closeAnalyzerModalBtn) {
+        closeAnalyzerModalBtn.addEventListener("click", closeAnalyzerModal);
+      }
+
+      if (analyzerModal) {
+        analyzerModal.addEventListener("click", (e) => {
+          if (e.target === analyzerModal) closeAnalyzerModal();
+        });
+      }
 
       // View switcher buttons
       viewTableBtn.addEventListener("click", () => {
@@ -2531,6 +3189,17 @@
 
       // No simulator listeners
     }
+
+    // Column Sorting Engine
+    window.handleSort = function(column) {
+      if (sortColumn === column) {
+        sortDirection = sortDirection === "asc" ? "desc" : "asc";
+      } else {
+        sortColumn = column;
+        sortDirection = "asc";
+      }
+      renderDirectory();
+    };
 
     // Removed blueprint functions
 
@@ -2615,6 +3284,7 @@
       const textEl = document.getElementById("compare-bar-text");
       const chipsContainer = document.getElementById("compare-chips-container");
       const compareBtn = document.getElementById("compare-run-btn");
+      const analyzeBtn = document.getElementById("analyze-stack-btn");
 
       if (selectedCompareItems.length === 0) {
         bar.classList.remove("active");
@@ -2649,6 +3319,27 @@
         compareBtn.disabled = false;
         compareBtn.classList.add("enabled");
       }
+
+      // Enable Analyze button if at least 1 technology is selected
+      if (analyzeBtn) {
+        if (selectedCompareItems.length >= 1) {
+          analyzeBtn.disabled = false;
+          analyzeBtn.classList.add("enabled");
+          analyzeBtn.style.color = "";
+          analyzeBtn.style.background = "";
+          analyzeBtn.style.borderColor = "";
+          analyzeBtn.style.cursor = "";
+          analyzeBtn.style.opacity = "";
+        } else {
+          analyzeBtn.disabled = true;
+          analyzeBtn.classList.remove("enabled");
+          analyzeBtn.style.background = "rgba(166, 209, 137, 0.1)";
+          analyzeBtn.style.border = "1px solid rgba(166, 209, 137, 0.2)";
+          analyzeBtn.style.color = "var(--success)";
+          analyzeBtn.style.cursor = "not-allowed";
+          analyzeBtn.style.opacity = "0.6";
+        }
+      }
       
       lucide.createIcons();
     }
@@ -2663,6 +3354,16 @@
       if (compareBtn) {
         compareBtn.disabled = true;
         compareBtn.classList.remove("enabled");
+      }
+      const analyzeBtn = document.getElementById("analyze-stack-btn");
+      if (analyzeBtn) {
+        analyzeBtn.disabled = true;
+        analyzeBtn.classList.remove("enabled");
+        analyzeBtn.style.background = "rgba(166, 209, 137, 0.1)";
+        analyzeBtn.style.border = "1px solid rgba(166, 209, 137, 0.2)";
+        analyzeBtn.style.color = "var(--success)";
+        analyzeBtn.style.cursor = "not-allowed";
+        analyzeBtn.style.opacity = "0.6";
       }
       document.getElementById("compare-bar").classList.remove("active");
     };
@@ -2839,12 +3540,376 @@
       document.getElementById("compare-modal").classList.remove("open");
     };
 
+    // Stack Analyzer & Scoring Engine
+    window.calculateStackScore = function(items) {
+      if (items.length === 0) return 0;
+
+      let score = 0;
+      
+      // 1. Layer Coverage (Max 40 points)
+      const hasFrontend = items.some(item => item.category.startsWith("Frontend"));
+      const hasBackend = items.some(item => item.category === "Backend");
+      const hasDatabase = items.some(item => item.category === "Database" || item.category === "API Layer");
+      
+      if (hasFrontend) score += 15;
+      if (hasBackend) score += 15;
+      if (hasDatabase) score += 10;
+
+      // 2. Compatibility & Synergy Bonuses (Max 30 points)
+      const itemIds = items.map(item => item.id);
+      
+      // React/NextJS + Zustand
+      if ((itemIds.includes("react") || itemIds.includes("nextjs")) && itemIds.includes("zustand")) {
+        score += 10;
+      }
+      // React + Next.js
+      if (itemIds.includes("react") && itemIds.includes("nextjs")) {
+        score += 10;
+      }
+      // React + Framer Motion
+      if (itemIds.includes("react") && itemIds.includes("framer-motion")) {
+        score += 5;
+      }
+      // FastAPI + PostgreSQL
+      if (itemIds.includes("fastapi") && itemIds.includes("postgresql")) {
+        score += 10;
+      }
+      // NestJS + PostgreSQL
+      if (itemIds.includes("nestjs") && itemIds.includes("postgresql")) {
+        score += 10;
+      }
+      // Node.js + MongoDB
+      if (itemIds.includes("nodejs") && itemIds.includes("mongodb")) {
+        score += 10;
+      }
+      // PostgreSQL + Redis
+      if (itemIds.includes("postgresql") && itemIds.includes("redis")) {
+        score += 5;
+      }
+
+      // 3. Redundancy & Complexity Penalties (Subtracts up to 30 points)
+      // Multiple backends
+      const backends = items.filter(item => item.id === "nodejs" || item.id === "nestjs" || item.id === "fastapi");
+      if (backends.length > 1) {
+        score -= 15;
+      }
+
+      // Multiple primary databases
+      const primaryDbs = items.filter(item => item.id === "postgresql" || item.id === "mongodb");
+      if (primaryDbs.length > 1) {
+        score -= 10;
+      }
+
+      // 4. Adoption Rating Average (Max 30 points)
+      const averagePopularity = items.reduce((sum, item) => sum + item.popularity, 0) / items.length;
+      score += Math.round(averagePopularity * 0.3);
+
+      return Math.min(100, Math.max(0, score));
+    };
+
+    window.generateStackSummary = function(items) {
+      const reports = {
+        frontend: "No frontend technologies selected. Clients will have no user interface to interact with.",
+        backend: "No backend runtime or API frameworks selected. The application will be a static frontend with no server-side persistence or dynamic business logic.",
+        database: "No database or caching layer selected. Data will not persist across client sessions.",
+        verdict: {
+          status: "danger",
+          title: "Incomplete System Architecture",
+          desc: "You have not selected enough components to build a viable full-stack system. Select at least a Frontend UI layer, a Backend service, and a Database to establish full client-server data flow."
+        }
+      };
+
+      if (items.length === 0) return reports;
+
+      const itemIds = items.map(item => item.id);
+      
+      // Filter components by layer
+      const frontendComponents = items.filter(item => item.category.startsWith("Frontend"));
+      const backendComponents = items.filter(item => item.category === "Backend");
+      const databaseComponents = items.filter(item => item.category === "Database" || item.category === "API Layer");
+
+      // 1. Frontend summary
+      if (frontendComponents.length > 0) {
+        const names = frontendComponents.map(c => c.name);
+        let summary = `Your frontend is driven by **${names.join(', ')}**. `;
+        
+        const hasReact = itemIds.includes("react");
+        const hasNext = itemIds.includes("nextjs");
+        const hasZustand = itemIds.includes("zustand");
+        const hasTailwind = itemIds.includes("tailwindcss");
+        const hasFramer = itemIds.includes("framer-motion");
+
+        if (hasNext) {
+          summary += "Next.js operates as a robust full-stack meta-framework, serving server-rendered React pages (SSR) and routing payloads natively. ";
+        } else if (hasReact) {
+          summary += "React acts as a declarative component UI library, constructing dynamic client-side layouts. ";
+        }
+        
+        if (hasZustand) {
+          summary += "Client-side state operations are managed efficiently using Zustand, avoiding Context rendering bottlenecks. ";
+        }
+        
+        if (hasTailwind) {
+          summary += "Styling is handled via Tailwind CSS utility classes, ensuring rapid custom layout compilation. ";
+        }
+        
+        if (hasFramer) {
+          summary += "Framer Motion coordinates premium, hardware-accelerated animations for fluid interactions.";
+        }
+        reports.frontend = summary;
+      }
+
+      // 2. Backend summary
+      if (backendComponents.length > 0) {
+        const names = backendComponents.map(c => c.name);
+        let summary = `The service layer is powered by **${names.join(', ')}**. `;
+        
+        const hasNode = itemIds.includes("nodejs");
+        const hasNest = itemIds.includes("nestjs");
+        const hasFastApi = itemIds.includes("fastapi");
+
+        if (hasFastApi) {
+          summary += "FastAPI leverages Python's type annotations to serve ultra-fast, ASGI-compatible REST endpoints, automatically documenting schemas via Swagger. Perfect for connecting AI/ML pipelines. ";
+        }
+        
+        if (hasNest) {
+          summary += "NestJS enforces a highly structured, Angular-style TypeScript architecture with robust dependency injection, making it excellent for large enterprise scale. ";
+        } else if (hasNode) {
+          summary += "Node.js provides a high-performance event-loop runtime for executing JavaScript on the server, handling high concurrency with non-blocking I/O. ";
+        }
+        reports.backend = summary;
+      } else if (itemIds.includes("nextjs")) {
+        reports.backend = "Next.js acts as a hybrid framework, utilizing Server Actions and API Router endpoints to handle backend operations natively without requiring a standalone backend server.";
+      }
+
+      // 3. Database summary
+      if (databaseComponents.length > 0) {
+        const names = databaseComponents.map(c => c.name);
+        let summary = `Your storage and connectivity are handled by **${names.join(', ')}**. `;
+        
+        const hasPostgres = itemIds.includes("postgresql");
+        const hasMongo = itemIds.includes("mongodb");
+        const hasRedis = itemIds.includes("redis");
+        const hasApis = itemIds.includes("apis");
+
+        if (hasPostgres) {
+          summary += "PostgreSQL serves as the primary object-relational store, ensuring strict ACID transactions and supporting advanced search queries (like vector embeddings via pgvector). ";
+        }
+        
+        if (hasMongo) {
+          summary += "MongoDB stores document collections in flexible BSON structures, facilitating rapid prototype schema adjustments. ";
+        }
+        
+        if (hasRedis) {
+          summary += "Redis acts as an in-memory key-value cache layer, providing sub-millisecond latencies for active sessions and speed-critical queries. ";
+        }
+        
+        if (hasApis) {
+          summary += "System communication uses structured protocols (GraphQL, REST, or gRPC) to separate presentation and storage schemas.";
+        }
+        reports.database = summary;
+      }
+
+      // 4. Verdict evaluation
+      const score = calculateStackScore(items);
+      const hasCoreThree = (frontendComponents.length > 0 || itemIds.includes("nextjs")) && 
+                            (backendComponents.length > 0 || itemIds.includes("nextjs")) && 
+                            databaseComponents.some(c => c.id !== "apis"); // needs real db
+      
+      const backends = items.filter(item => item.id === "nodejs" || item.id === "nestjs" || item.id === "fastapi");
+      const dbs = items.filter(item => item.id === "postgresql" || item.id === "mongodb");
+
+      if (backends.length > 1 || dbs.length > 1) {
+        reports.verdict = {
+          status: "warning",
+          title: "Over-Engineered Architecture",
+          desc: `Your current configuration contains redundant layers (${backends.length > 1 ? 'multiple backend frameworks' : ''} ${dbs.length > 1 ? 'multiple primary databases' : ''}). This introduces substantial maintenance overhead, complex data syncing, and deploy friction. Consider simplifying your stack.`
+        };
+      } else if (score >= 80 && hasCoreThree) {
+        let presetVerdict = "Your architectural selection is extremely well-balanced! Component compatibility is optimized, redundancy is minimized, and adoption is strong. Perfect for launching modern, high-scale digital platforms.";
+        if (itemIds.includes("fastapi") && itemIds.includes("postgresql")) {
+          presetVerdict = "Excellent, modern Python/Relational stack. Perfect for data-heavy applications, AI integration pipelines, and SaaS dashboards requiring high computational speed.";
+        } else if (itemIds.includes("nextjs") && itemIds.includes("postgresql")) {
+          presetVerdict = "Standard production meta-stack. Relational integrity meets fast server-rendered views. Highly recommended for SaaS, e-commerce, and enterprise applications.";
+        } else if (itemIds.includes("react") && itemIds.includes("zustand") && itemIds.includes("nodejs") && itemIds.includes("mongodb")) {
+          presetVerdict = "Classic high-speed JavaScript stack (MERN-style). Highly productive, zero language-switching context overhead, and excellent for rapid document schemas.";
+        }
+        reports.verdict = {
+          status: "success",
+          title: "Production-Ready Architecture",
+          desc: presetVerdict
+        };
+      } else if (score >= 50 && hasCoreThree) {
+        reports.verdict = {
+          status: "success",
+          title: "Viable Full-Stack Architecture",
+          desc: "You have a solid full-stack baseline. However, some minor optimizations are possible (e.g. adding Redis caching, integrating Zustand for React states, or ensuring the build tools align). It is highly viable for standard application projects."
+        };
+      } else if (!hasCoreThree) {
+        const missing = [];
+        if (frontendComponents.length === 0 && !itemIds.includes("nextjs")) {
+          missing.push('<strong style="text-decoration: underline; font-weight: 800;">Frontend UI Client</strong>');
+        }
+        if (backendComponents.length === 0 && !itemIds.includes("nextjs")) {
+          missing.push('<strong style="text-decoration: underline; font-weight: 800;">Backend Application Server</strong>');
+        }
+        if (!databaseComponents.some(c => c.id !== "apis")) {
+          missing.push('<strong style="text-decoration: underline; font-weight: 800;">Persistent Database / Datastore</strong>');
+        }
+
+        let missingStr = "";
+        if (missing.length === 1) {
+          missingStr = missing[0];
+        } else if (missing.length === 2) {
+          missingStr = `${missing[0]} and ${missing[1]}`;
+        } else {
+          missingStr = `${missing.slice(0, -1).join(", ")}, and ${missing[missing.length - 1]}`;
+        }
+
+        reports.verdict = {
+          status: "warning",
+          title: "Incomplete Infrastructure",
+          desc: `You have selected some great components, but your system is missing key operational layers: ${missingStr}. Select at least one component for each of these layers to establish correct client-server data flows.`
+        };
+      } else {
+        reports.verdict = {
+          status: "danger",
+          title: "Poor Architectural Fit",
+          desc: "The selected technologies do not coordinate effectively or have high redundancy, resulting in a low score. We recommend selecting a unified stack (e.g. Next.js + Postgres, or React + Zustand + Node.js + Mongo) to ensure compatibility."
+        };
+      }
+
+      return reports;
+    };
+
+    window.openAnalyzerModal = function() {
+      const items = selectedCompareItems.map(id => techStack.find(t => t.id === id)).filter(Boolean);
+      if (items.length === 0) return;
+
+      const score = calculateStackScore(items);
+      const reports = generateStackSummary(items);
+
+      // Populate score percentage and svg dashoffset
+      document.getElementById("analyzer-score-val").textContent = `${score}%`;
+      
+      const scoreCircle = document.getElementById("analyzer-score-circle");
+      if (scoreCircle) {
+        // Circle circumference is 2 * Math.PI * 45 = 282.74 -> 283
+        const offset = 283 - (283 * score) / 100;
+        scoreCircle.style.strokeDashoffset = offset;
+        
+        // Color-code the circle
+        if (score >= 80) {
+          scoreCircle.style.stroke = "var(--success)";
+        } else if (score >= 50) {
+          scoreCircle.style.stroke = "var(--token-class)"; // orange/yellow
+        } else {
+          scoreCircle.style.stroke = "var(--accent)"; // red
+        }
+      }
+
+      // Populate selected chips
+      const chipsContainer = document.getElementById("analyzer-inventory-chips");
+      if (chipsContainer) {
+        chipsContainer.innerHTML = items.map(item => `
+          <span class="inventory-chip">
+            <span>${item.name}</span>
+          </span>
+        `).join('');
+      }
+      // Calculate active layers for header status badges
+      const itemIds = items.map(item => item.id);
+      const hasFrontend = items.some(item => item.category.startsWith("Frontend"));
+      const hasBackend = items.some(item => item.category === "Backend") || itemIds.includes("nextjs");
+      const hasDatabase = items.some(item => item.category === "Database" || item.category === "API Layer");
+
+      const statusFrontend = document.getElementById("analyzer-status-frontend");
+      const statusBackend = document.getElementById("analyzer-status-backend");
+      const statusDatabase = document.getElementById("analyzer-status-database");
+
+      if (statusFrontend) {
+        statusFrontend.className = "status-badge " + (hasFrontend ? "success-badge" : "danger-badge");
+        statusFrontend.innerHTML = hasFrontend ? 
+          '<i data-lucide="check" size="12"></i> Active' : 
+          '<i data-lucide="x" size="12"></i> Missing';
+      }
+
+      if (statusBackend) {
+        statusBackend.className = "status-badge " + (hasBackend ? "success-badge" : "danger-badge");
+        statusBackend.innerHTML = hasBackend ? 
+          '<i data-lucide="check" size="12"></i> Active' : 
+          '<i data-lucide="x" size="12"></i> Missing';
+      }
+
+      if (statusDatabase) {
+        statusDatabase.className = "status-badge " + (hasDatabase ? "success-badge" : "danger-badge");
+        statusDatabase.innerHTML = hasDatabase ? 
+          '<i data-lucide="check" size="12"></i> Active' : 
+          '<i data-lucide="x" size="12"></i> Missing';
+      }
+
+      // Populate reports
+      document.getElementById("analyzer-report-frontend").innerHTML = reports.frontend;
+      document.getElementById("analyzer-report-backend").innerHTML = reports.backend;
+      document.getElementById("analyzer-report-database").innerHTML = reports.database;
+
+      // Populate verdict banner
+      const verdictBox = document.getElementById("analyzer-verdict-box");
+      const verdictTitle = document.getElementById("analyzer-verdict-title");
+      const verdictDesc = document.getElementById("analyzer-verdict-desc");
+      const verdictIcon = document.getElementById("analyzer-verdict-icon");
+
+      if (verdictBox) {
+        // Reset classes
+        verdictBox.className = "verdict-box";
+        
+        let iconName = "help-circle";
+        if (reports.verdict.status === "success") {
+          verdictBox.classList.add("verdict-success");
+          iconName = "check-circle";
+        } else if (reports.verdict.status === "warning") {
+          verdictBox.classList.add("verdict-warning");
+          iconName = "alert-triangle";
+        } else {
+          verdictBox.classList.add("verdict-danger");
+          iconName = "x-circle";
+        }
+
+        verdictTitle.textContent = reports.verdict.title;
+        verdictDesc.innerHTML = reports.verdict.desc;
+        
+        if (verdictIcon) {
+          verdictIcon.setAttribute("data-lucide", iconName);
+        }
+      }
+
+      // Open Modal
+      document.getElementById("analyzer-modal").classList.add("open");
+      lucide.createIcons();
+    };
+
+    window.closeAnalyzerModal = function() {
+      // Reset circle dashoffset for animation
+      const scoreCircle = document.getElementById("analyzer-score-circle");
+      if (scoreCircle) {
+        scoreCircle.style.strokeDashoffset = 283;
+      }
+      document.getElementById("analyzer-modal").classList.remove("open");
+    };
+
     // Removed blueprint functions
 
     // Open detail modal with full technical data
     window.openDetails = function(techId) {
       const item = techStack.find(i => i.id === techId);
       if (!item) return;
+
+      activeDetailsId = techId;
+      document.querySelectorAll("#tech-table-body tr").forEach(row => row.classList.remove("active-row-highlight"));
+      const activeRow = document.getElementById(`row-${techId}`);
+      if (activeRow) {
+        activeRow.classList.add("active-row-highlight");
+      }
 
       modalTechIcon.textContent = item.name.substring(0,2);
       modalTechTitle.textContent = item.name;
@@ -2899,6 +3964,8 @@
     };
 
     function closeModal() {
+      activeDetailsId = null;
+      document.querySelectorAll("#tech-table-body tr").forEach(row => row.classList.remove("active-row-highlight"));
       techModal.classList.remove("open");
     }
 
