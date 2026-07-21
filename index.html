@@ -3213,6 +3213,30 @@
           code: `import pymupdf  # PyMuPDF (fitz)\nfrom paddleocr import PaddleOCR\n\ndef extract_pdf_text(path: str) -> str:\n    doc = pymupdf.open(path)\n    text = "\\n".join(page.get_text() for page in doc)\n    if text.strip():\n        return text\n    # OCR fallback for scanned PDFs\n    ocr = PaddleOCR(use_angle_cls=True, lang="en")\n    parts = []\n    for page in doc:\n        pix = page.get_pixmap(dpi=200)\n        result = ocr.ocr(pix.tobytes("png"))\n        parts += [line[1][0] for line in result[0] or []]\n    return "\\n".join(parts)`,
         },
         {
+          id: "pdfplumber",
+          name: "pdfplumber + pytesseract",
+          category: "Data Extraction",
+          role: "PDF Extraction (Alternative)",
+          popularity: 85,
+          link: "https://github.com/jsvine/pdfplumber",
+          highlight:
+            "PDF → pdfplumber (text extraction), pdf2image + pytesseract (OCR fallback).",
+          description:
+            "pdfplumber is an MIT-licensed Python library for extracting text, tables, and metadata from digitally-generated PDFs with precise positional control. For scanned or image-based PDFs, pdf2image converts pages to images and pytesseract performs OCR as a fallback pipeline.",
+          whyPopular:
+            "It gives fine-grained access to every character, line, and rectangle on a PDF page, making it the go-to for structured bordered-table extraction. Its permissive MIT license makes it a deliberate alternative to the AGPL-licensed PyMuPDF for commercial stacks.",
+          pros: [
+            "Accurate bordered-table and layout-aware text extraction",
+            "MIT-licensed — no copyleft constraints for commercial use",
+            "Visual debugging tools to inspect page geometry",
+          ],
+          cons: [
+            "Roughly 10x slower than PyMuPDF on plain text extraction",
+            "OCR fallback requires the external Tesseract binary installed",
+          ],
+          code: `import pdfplumber\nfrom pdf2image import convert_from_path\nimport pytesseract\n\ndef extract_pdf_text(path: str) -> str:\n    with pdfplumber.open(path) as pdf:\n        text = "\\n".join(page.extract_text() or "" for page in pdf.pages)\n    if text.strip():\n        return text\n    # OCR fallback for scanned PDFs\n    images = convert_from_path(path)\n    return "\\n".join(pytesseract.image_to_string(img) for img in images)`,
+        },
+        {
           id: "python-docx",
           name: "pandoc + python-docx",
           category: "Data Extraction",
