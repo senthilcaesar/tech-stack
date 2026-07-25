@@ -3000,6 +3000,54 @@
           code: `import { Box, Heading, Button, Flex, useColorMode } from '@chakra-ui/react';\n\nfunction ToggleThemeCard() {\n  const { colorMode, toggleColorMode } = useColorMode();\n  \n  return (\n    <Box p={6} bg={colorMode === 'dark' ? 'gray.800' : 'white'} borderRadius="lg">\n      <Heading size="md">Theme Configurator</Heading>\n      <Button onClick={toggleColorMode} mt={4} colorScheme="indigo">\n        Toggle {colorMode === 'light' ? 'Dark' : 'Light'}\n      </Button>\n    </Box>\n  );\n}`,
         },
         {
+          id: "material-ui",
+          name: "Material UI",
+          category: "Frontend Styling",
+          role: "React UI Library",
+          popularity: 92,
+          link: "https://mui.com",
+          highlight:
+            "Comprehensive React UI component library implementing Google's Material Design.",
+          description:
+            "Material UI (MUI) is a production-ready React UI component library implementing Google's Material Design system. It provides a comprehensive suite of accessible, pre-styled components—including buttons, modals, data tables, and navigation drawers—along with a powerful theme customization engine.",
+          whyPopular:
+            "Material UI is the leading enterprise React UI library. Its rich set of pre-built controls, strict WAI-ARIA accessibility compliance, robust TypeScript definitions, and MUI X data grids significantly accelerate enterprise web application development.",
+          pros: [
+            "Extensive library of accessible, production-ready React components",
+            "Comprehensive theme customization engine with CSS-in-JS and CSS variables",
+            "First-class TypeScript support and enterprise-grade data grid features",
+          ],
+          cons: [
+            "Larger bundle footprint compared to minimal utility-first styling libraries",
+            "Customizing components away from default Material Design specifications requires extensive theme overrides",
+          ],
+          code: `import React from 'react';\nimport { Button, Card, CardContent, Typography, Stack } from '@mui/material';\nimport SendIcon from '@mui/icons-material/Send';\n\nexport function ActionCard() {\n  return (\n    <Card sx={{ maxWidth: 360, p: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 3 }}>\n      <CardContent>\n        <Typography variant="h5" component="div" fontWeight="bold" gutterBottom>\n          Material UI\n        </Typography>\n        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>\n          Build responsive, enterprise-grade interfaces with pre-built React components.\n        </Typography>\n        <Stack direction="row" spacing={2}>\n          <Button variant="contained" color="primary" endIcon={<SendIcon />}>\n            Submit\n          </Button>\n          <Button variant="outlined" color="secondary">\n            Cancel\n          </Button>\n        </Stack>\n      </CardContent>\n    </Card>\n  );\n}`,
+        },
+        {
+          id: "threejs",
+          name: "Three.js",
+          category: "Frontend 3D & Graphics",
+          role: "3D WebGL Engine",
+          popularity: 90,
+          link: "https://threejs.org",
+          highlight:
+            "Cross-browser JavaScript library for rendering interactive 3D WebGL computer graphics.",
+          description:
+            "Three.js is an open-source 3D graphics engine that simplifies WebGL development. It provides high-level abstractions for 3D scenes, cameras, directional lights, materials, meshes, shaders, and animation loops, enabling high-performance 3D rendering natively in web browsers.",
+          whyPopular:
+            "Three.js is the undisputed industry standard for web 3D graphics, immersive product visualizers, interactive browser games, and WebXR experiences. It pairs seamlessly with React via React Three Fiber to build modern 3D web applications.",
+          pros: [
+            "Abstracts low-level WebGL graphics APIs into clean, intuitive JavaScript objects",
+            "Rich ecosystem with built-in loaders for GLTF/OBJ 3D models, physics, and post-processing",
+            "Massive global community, extensive documentation, and React Three Fiber integration",
+          ],
+          cons: [
+            "High GPU and battery consumption on mobile devices if 3D assets are unoptimized",
+            "Requires foundational understanding of 3D math (vectors, matrices, lighting shaders)",
+          ],
+          code: `import * as THREE from 'three';\n\n// 1. Initialize Scene, Camera, and Renderer\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);\nconst renderer = new THREE.WebGLRenderer({ antialias: true });\nrenderer.setSize(window.innerWidth, window.innerHeight);\ndocument.body.appendChild(renderer.domElement);\n\n// 2. Add Directional Lighting & 3D Cube Mesh\nconst light = new THREE.DirectionalLight(0xffffff, 1);\nlight.position.set(2, 2, 5);\nscene.add(light);\n\nconst geometry = new THREE.BoxGeometry(1, 1, 1);\nconst material = new THREE.MeshStandardMaterial({ color: 0xca9ee6, roughness: 0.3 });\nconst cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\ncamera.position.z = 4;\n\n// 3. Animation Render Loop\nfunction animate() {\n  requestAnimationFrame(animate);\n  cube.rotation.x += 0.01;\n  cube.rotation.y += 0.01;\n  renderer.render(scene, camera);\n}\nanimate();`,
+        },
+        {
           id: "lucide-react",
           name: "Lucide React",
           category: "Frontend Tooling",
@@ -4087,7 +4135,7 @@
             let codeExt = "javascript";
             if (item.id === "postgresql") codeExt = "sql";
             else if (item.id === "fastapi") codeExt = "python";
-            else if (item.id === "nextjs" || item.id === "zustand")
+            else if (item.id === "nextjs" || item.id === "zustand" || item.id === "material-ui")
               codeExt = "typescript";
 
             return `
@@ -4684,7 +4732,7 @@
         let codeExt = "javascript";
         if (item.id === "postgresql") codeExt = "sql";
         else if (item.id === "fastapi") codeExt = "python";
-        else if (item.id === "nextjs" || item.id === "zustand")
+        else if (item.id === "nextjs" || item.id === "zustand" || item.id === "material-ui")
           codeExt = "typescript";
         modalCodeLang.textContent = codeExt.toUpperCase();
 
