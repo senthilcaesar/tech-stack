@@ -3118,6 +3118,30 @@
           code: `// src/cats/cats.controller.ts\nimport { Controller, Get, Post, Body } from '@nestjs/common';\n\n@Controller('cats')\nexport class CatsController {\n  @Get()\n  findAll(): string[] {\n    return ['Persian', 'Siamese', 'Maine Coon'];\n  }\n\n  @Post()\n  create(@Body() payload: { name: string }): string {\n    return \`Added cat \${payload.name}\`;\n  }\n}`,
         },
         {
+          id: "expressjs",
+          name: "Express.js",
+          category: "Backend",
+          role: "Minimalist Node Framework",
+          popularity: 92,
+          link: "https://expressjs.com",
+          highlight:
+            "Fast, unopinionated, minimalist web framework for Node.js.",
+          description:
+            "Express.js is a lightweight web application framework for Node.js that provides a thin layer of routing and middleware utilities on top of the raw HTTP module, without hiding the underlying Node APIs.",
+          whyPopular:
+            "Its minimal footprint and huge middleware ecosystem make it the default starting point for building REST APIs on Node.js, and it underpins many higher-level frameworks (NestJS, Next.js API routes).",
+          pros: [
+            "Minimal, unopinionated core keeps the learning curve low",
+            "Massive middleware ecosystem (auth, logging, validation, etc.)",
+            "Flexible routing makes it easy to structure APIs of any size",
+          ],
+          cons: [
+            "Lack of enforced structure can lead to inconsistent codebases at scale",
+            "No built-in TypeScript support or dependency injection like NestJS",
+          ],
+          code: `// Express.js backend API using Node.js runtime\nimport express from 'express';\nconst app = express();\nconst PORT = process.env.PORT || 4000;\n\napp.use(express.json());\n\napp.get('/api/health', (req, res) => {\n  res.status(200).json({ status: 'OK', uptime: process.uptime() });\n});\n\napp.listen(PORT, () => {\n  console.log(\`Server is executing on port \${PORT}\`);\n});`,
+        },
+        {
           id: "fastapi",
           name: "FastAPI",
           category: "Backend",
@@ -4135,7 +4159,11 @@
             let codeExt = "javascript";
             if (item.id === "postgresql") codeExt = "sql";
             else if (item.id === "fastapi") codeExt = "python";
-            else if (item.id === "nextjs" || item.id === "zustand" || item.id === "material-ui")
+            else if (
+              item.id === "nextjs" ||
+              item.id === "zustand" ||
+              item.id === "material-ui"
+            )
               codeExt = "typescript";
 
             return `
@@ -4732,7 +4760,11 @@
         let codeExt = "javascript";
         if (item.id === "postgresql") codeExt = "sql";
         else if (item.id === "fastapi") codeExt = "python";
-        else if (item.id === "nextjs" || item.id === "zustand" || item.id === "material-ui")
+        else if (
+          item.id === "nextjs" ||
+          item.id === "zustand" ||
+          item.id === "material-ui"
+        )
           codeExt = "typescript";
         modalCodeLang.textContent = codeExt.toUpperCase();
 
