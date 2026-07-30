@@ -3452,6 +3452,54 @@
           ],
           code: `from pathlib import Path\n\n# One-liner with pathlib\ncontent = Path("notes.md").read_text(encoding="utf-8")\n\n# Classic open() with explicit encoding + error handling\nwith open("data.txt", "r", encoding="utf-8", errors="replace") as f:\n    for line in f:\n        process(line.rstrip("\\n"))`,
         },
+        {
+          id: "mammoth",
+          name: "mammoth",
+          category: "Data Extraction",
+          role: "DOCX Extraction (HTML → Markdown)",
+          popularity: 76,
+          link: "https://github.com/mwilliamson/python-mammoth",
+          highlight:
+            "DOCX → mammoth (docx → HTML), then converted to Markdown.",
+          description:
+            'mammoth converts .docx files into clean, semantic HTML by mapping Word styles (e.g. "Heading 1") to HTML tags rather than preserving exact visual formatting. The resulting HTML is then run through an HTML-to-Markdown converter to produce LLM-ready Markdown.',
+          whyPopular:
+            "Its style-mapping approach strips Word's messy inline formatting and produces consistently clean output, making it a favorite for content-focused pipelines that need readable Markdown rather than pixel-accurate rendering.",
+          pros: [
+            "Produces clean semantic HTML instead of formatting-heavy markup",
+            "Configurable style mappings for custom Word styles",
+            "Pure Python — no external binaries or Word installation required",
+          ],
+          cons: [
+            "Ignores exact visual layout (positioning, complex tables render simply)",
+            "Requires a second conversion step (HTML → Markdown) for Markdown output",
+          ],
+          code: `import mammoth\nimport markdownify\n\nwith open("report.docx", "rb") as f:\n    result = mammoth.convert_to_html(f)\n    html = result.value  # clean semantic HTML\n\nmarkdown = markdownify.markdownify(html, heading_style="ATX")\nprint(markdown)`,
+        },
+        {
+          id: "pdfminer-six",
+          name: "pdfminer.six + pdfplumber",
+          category: "Data Extraction",
+          role: "PDF Extraction (Layout-Aware)",
+          popularity: 83,
+          link: "https://github.com/pdfminer/pdfminer.six",
+          highlight:
+            "PDF → pdfminer.six (low-level text/layout parsing), pdfplumber (table extraction built on top).",
+          description:
+            "pdfminer.six is a pure-Python PDF parser that exposes precise, low-level access to text positioning, fonts, and layout objects. pdfplumber is built directly on top of pdfminer.six and adds a higher-level API for pulling out text and bordered tables with visual debugging tools.",
+          whyPopular:
+            "pdfminer.six is one of the most mature pure-Python PDF parsing engines and underpins many higher-level tools, including pdfplumber itself — pairing them gives both fine-grained layout access and convenient table extraction in one stack.",
+          pros: [
+            "Pure Python — no external binaries required",
+            "Fine-grained access to character-level positioning and layout",
+            "pdfplumber layer adds accurate bordered-table extraction",
+          ],
+          cons: [
+            "Slower than compiled parsers like PyMuPDF on large PDFs",
+            "No OCR support — scanned/image-based PDFs need a separate fallback",
+          ],
+          code: `from pdfminer.high_level import extract_text\nimport pdfplumber\n\n# Option 1: pdfminer.six — raw layout-aware text extraction\ntext = extract_text("report.pdf")\n\n# Option 2: pdfplumber — structured text + tables\nwith pdfplumber.open("report.pdf") as pdf:\n    for page in pdf.pages:\n        print(page.extract_text())\n        for table in page.extract_tables():\n            print(table)`,
+        },
       ];
 
       // DOM References
