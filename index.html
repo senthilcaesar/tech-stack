@@ -1014,118 +1014,6 @@
         }
       }
 
-      /* MUI Floating Action Button (FAB) Speed Dial */
-      .mui-speed-dial-container {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-        gap: 0.75rem;
-        z-index: 1000;
-      }
-      .mui-fab {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        border: none;
-        color: #fff;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s;
-        position: relative;
-        overflow: hidden;
-      }
-      .mui-fab:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-      }
-      .mui-fab:active {
-        transform: scale(0.95);
-      }
-      .mui-fab i {
-        transition: transform 0.25s ease;
-      }
-      .mui-speed-dial-container.open .mui-fab i {
-        transform: rotate(135deg);
-      }
-      .mui-speed-dial-actions {
-        display: flex;
-        flex-direction: column-reverse;
-        gap: 0.5rem;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(20px);
-        transition: opacity 0.2s ease, transform 0.2s ease;
-      }
-      .mui-speed-dial-container.open .mui-speed-dial-actions {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-      }
-      .mui-speed-dial-action {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #292c3c;
-        border: 1px solid var(--panel-border);
-        color: var(--text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        position: relative;
-      }
-      .mui-speed-dial-action:hover {
-        background: #3c405b;
-        color: #fff;
-        transform: scale(1.1);
-      }
-      .mui-speed-dial-action::after {
-        content: attr(data-label);
-        position: absolute;
-        right: 50px;
-        background: #181926;
-        color: #c6d0f5;
-        padding: 0.25rem 0.6rem;
-        border-radius: 4px;
-        font-size: 0.72rem;
-        font-weight: 500;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
-        border: 1px solid var(--panel-border);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      }
-      .mui-speed-dial-action:hover::after {
-        opacity: 1;
-      }
-      .mui-fab-badge {
-        position: absolute;
-        top: -4px;
-        right: -4px;
-        background: var(--accent);
-        color: #fff;
-        font-size: 0.68rem;
-        font-weight: 700;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #292c3c;
-        box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
-      }
-
       /* MUI Collapsible Accordions */
       .mui-accordion {
         background: rgba(41, 44, 60, 0.4);
@@ -1183,58 +1071,6 @@
         font-size: 0.85rem;
         line-height: 1.6;
         color: var(--text-secondary);
-      }
-
-      /* MUI Density Switch styling */
-      .mui-switch-container {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-left: 1rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        cursor: pointer;
-        user-select: none;
-      }
-      .mui-switch {
-        position: relative;
-        display: inline-block;
-        width: 34px;
-        height: 20px;
-      }
-      .mui-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      .mui-switch-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: rgba(255,255,255,0.1);
-        border: 1px solid var(--panel-border);
-        transition: .3s;
-        border-radius: 20px;
-      }
-      .mui-switch-slider:before {
-        position: absolute;
-        content: "";
-        height: 12px;
-        width: 12px;
-        left: 3px;
-        bottom: 3px;
-        background-color: var(--text-muted);
-        transition: .3s;
-        border-radius: 50%;
-      }
-      .mui-switch input:checked + .mui-switch-slider {
-        background-color: rgba(202, 158, 230, 0.2);
-        border-color: rgba(202, 158, 230, 0.4);
-      }
-      .mui-switch input:checked + .mui-switch-slider:before {
-        transform: translateX(14px);
-        background-color: var(--secondary);
       }
 
 
@@ -3046,19 +2882,249 @@
         margin: 0;
       }
 
-      /* Dense View Option Overrides */
-      body.dense-view td {
-        padding: 0.5rem 1.25rem !important;
+      /* Visual refinement: editorial developer workspace */
+      :root {
+        --bg-color: #242836;
+        --panel-bg: rgba(34, 38, 52, 0.76);
+        --panel-border: rgba(198, 208, 245, 0.11);
+        --panel-border-hover: rgba(140, 170, 238, 0.42);
+        --text-primary: #e6e9f7;
+        --text-secondary: #b1b9d5;
+        --text-muted: #7f88a7;
+        --primary: #cba6f7;
+        --secondary: #8caaee;
+        --accent: #f38ba8;
+        --success: #a6e3a1;
+        --glow-shadow: 0 16px 40px rgba(13, 16, 27, 0.24);
+        --glow-shadow-strong: 0 18px 45px rgba(140, 170, 238, 0.18);
       }
-      body.dense-view th {
-        padding: 0.6rem 1.25rem !important;
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background:
+          radial-gradient(circle at 10% -10%, rgba(203, 166, 247, 0.13), transparent 28rem),
+          radial-gradient(circle at 97% 14%, rgba(140, 170, 238, 0.12), transparent 26rem),
+          var(--bg-color);
       }
-      body.dense-view .tech-card {
-        padding: 1rem !important;
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.22;
+        background-image: linear-gradient(rgba(198, 208, 245, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(198, 208, 245, 0.025) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 78%);
+      }
+      button, input { font-family: inherit; }
+      :focus-visible {
+        outline: 2px solid var(--secondary);
+        outline-offset: 3px;
+      }
+
+      header {
+        background: linear-gradient(105deg, rgba(25, 28, 42, 0.95), rgba(38, 44, 64, 0.88) 56%, rgba(31, 43, 67, 0.88));
+        border-color: rgba(140, 170, 238, 0.22);
+        border-radius: 20px;
+        box-shadow: 0 18px 52px rgba(11, 13, 23, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      }
+      header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(203, 166, 247, 0.18), transparent 24%, transparent 74%, rgba(140, 170, 238, 0.16));
+        mask-image: linear-gradient(#000, transparent 54%);
+      }
+      header h1 {
+        position: relative;
+        z-index: 1;
+        font-family: "Outfit", sans-serif;
+        letter-spacing: -0.8px;
+        background: linear-gradient(115deg, #f4efff 0%, #c4cfff 48%, #8bd8f5 100%);
+        -webkit-background-clip: text;
+      }
+      .search-container { z-index: 1; }
+      .search-input {
+        height: 46px;
+        background: rgba(12, 15, 26, 0.34);
+        border-color: rgba(198, 208, 245, 0.16);
+        border-radius: 10px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 8px 20px rgba(8, 10, 18, 0.16);
+      }
+      .search-input:hover { border-color: rgba(198, 208, 245, 0.28); }
+      .search-input:focus {
+        background: rgba(13, 16, 28, 0.58);
+        border-color: rgba(140, 170, 238, 0.75);
+        box-shadow: 0 0 0 4px rgba(140, 170, 238, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+      .theme-toggle-btn {
+        z-index: 1;
+        width: 42px;
+        height: 42px;
+        background: rgba(12, 15, 26, 0.34);
+        border-color: rgba(198, 208, 245, 0.17);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      .panel {
+        background: linear-gradient(145deg, rgba(47, 52, 69, 0.64), rgba(30, 33, 47, 0.72));
+        border: 1px solid var(--panel-border);
+        border-radius: 20px;
+        box-shadow: 0 18px 52px rgba(11, 13, 23, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(22px) saturate(125%);
+      }
+      .panel:hover {
+        border-color: rgba(198, 208, 245, 0.17);
+        box-shadow: 0 20px 56px rgba(11, 13, 23, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.045);
+      }
+      .controls-wrapper { gap: 0.85rem; }
+      #result-count {
+        font-family: "Fira Code", monospace;
+        font-size: 0.72rem !important;
+        letter-spacing: 0.02em;
+        color: var(--text-muted) !important;
+      }
+      .tabs-wrapper { gap: 0.2rem; border-bottom-color: rgba(198, 208, 245, 0.1); }
+      .tab-item {
+        border-color: transparent;
+        border-radius: 8px 8px 0 0;
+        background: transparent;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.01em;
+      }
+      .tab-item:hover { background: rgba(198, 208, 245, 0.055); border-color: transparent; }
+      .tab-item.active {
+        color: #ffffff;
+        background: rgba(203, 166, 247, 0.11);
+        border-color: transparent;
+      }
+      .mui-tab-indicator {
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary), #89dceb);
+        box-shadow: 0 0 14px rgba(140, 170, 238, 0.5);
+      }
+      .tab-item.active .tab-count-badge { color: #f4efff; background: rgba(203, 166, 247, 0.2); }
+      .view-toggle {
+        border-radius: 9px;
+        background: rgba(13, 16, 28, 0.34);
+        border-color: rgba(198, 208, 245, 0.12);
+      }
+      .toggle-btn { border-radius: 6px; font-size: 0.78rem; }
+      .toggle-btn.active { background: linear-gradient(125deg, rgba(203, 166, 247, 0.92), rgba(140, 170, 238, 0.92)); color: #1c1f2d; font-weight: 700; box-shadow: 0 3px 10px rgba(140, 170, 238, 0.2); }
+      .view-toggle { margin: 0 !important; }
+      @media (min-width: 769px) {
+        .controls-wrapper {
+          display: grid;
+          grid-template-columns: minmax(280px, 1fr) max-content;
+          gap: 0.65rem;
+          align-items: center;
+        }
+        #category-tabs {
+          min-width: 0;
+          margin: 0 !important;
+          justify-content: center;
+        }
+      }
+      .table-container {
+        border-radius: 14px;
+        border-color: rgba(198, 208, 245, 0.12);
+        background: rgba(16, 19, 31, 0.28);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025), 0 12px 30px rgba(10, 12, 21, 0.13);
+      }
+      th {
+        font-family: "Outfit", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.055em;
+        text-transform: uppercase;
+        padding: 0.7rem 1rem;
+        background: rgba(198, 208, 245, 0.035);
+        border-color: rgba(198, 208, 245, 0.08);
+      }
+      td { padding: 0.65rem 1rem; }
+      .tech-card { padding: 1rem; }
+      td { border-color: rgba(198, 208, 245, 0.065); }
+      tr { border-bottom-color: rgba(198, 208, 245, 0.065); }
+      tr:nth-child(even) { background: rgba(198, 208, 245, 0.018); }
+      tr:hover { background: rgba(140, 170, 238, 0.065) !important; }
+      .tech-icon-circle { background: linear-gradient(135deg, rgba(203, 166, 247, 0.2), rgba(140, 170, 238, 0.12)); border-color: rgba(198, 208, 245, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+      .tag { font-family: "Fira Code", monospace; font-size: 0.66rem; letter-spacing: 0.02em; }
+      .action-btn { border-radius: 9px; background: rgba(198, 208, 245, 0.045); border-color: rgba(198, 208, 245, 0.11); }
+      .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(140, 170, 238, 0.25); }
+
+      .tech-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        background: linear-gradient(145deg, rgba(54, 59, 78, 0.58), rgba(28, 31, 44, 0.7));
+        border-color: rgba(198, 208, 245, 0.11);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+      }
+      .tech-card::before { content: ""; position: absolute; inset: 0; opacity: 0; pointer-events: none; background: linear-gradient(125deg, rgba(203, 166, 247, 0.12), transparent 42%); transition: opacity 0.3s ease; }
+      .tech-card:hover { transform: translateY(-5px); border-color: rgba(140, 170, 238, 0.38); box-shadow: 0 18px 35px rgba(9, 11, 19, 0.28), 0 0 0 1px rgba(203, 166, 247, 0.06); }
+      .tech-card:hover::before { opacity: 1; }
+      .card-title { font-family: "Outfit", sans-serif; letter-spacing: -0.02em; }
+
+      .modal-overlay { background: rgba(13, 16, 26, 0.7); backdrop-filter: blur(14px) saturate(110%); }
+      .modal-card, #tech-modal .modal-card {
+        background: linear-gradient(145deg, rgba(48, 53, 71, 0.96), rgba(28, 31, 44, 0.98));
+        border-color: rgba(198, 208, 245, 0.15);
+        box-shadow: -12px 0 50px rgba(5, 7, 13, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .modal-header { border-bottom-color: rgba(198, 208, 245, 0.1) !important; }
+      .modal-section-title { font-family: "Outfit", sans-serif; letter-spacing: 0.01em; }
+      .modal-meta-card, .code-frame { border-color: rgba(198, 208, 245, 0.1) !important; }
+      .close-modal-btn { border-radius: 9px; }
+
+      .edu-section { border-top-color: rgba(198, 208, 245, 0.1); }
+      .edu-card {
+        border-radius: 14px;
+        background: rgba(38, 42, 57, 0.44);
+        border-color: rgba(198, 208, 245, 0.09);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      }
+      .edu-card:hover { transform: translateY(-3px); border-color: rgba(140, 170, 238, 0.28); background: rgba(48, 53, 70, 0.56); }
+      .edu-card h3 { font-family: "Outfit", sans-serif; }
+      .compare-bar { background: rgba(25, 28, 41, 0.87); border-color: rgba(203, 166, 247, 0.28); box-shadow: 0 18px 44px rgba(5, 7, 13, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+
+      body.light-mode {
+        --bg-color: #f3f5f9;
+        --panel-bg: rgba(255, 255, 255, 0.8);
+        --panel-border: rgba(57, 70, 111, 0.12);
+        --text-primary: #182037;
+        --text-secondary: #56617d;
+        --text-muted: #77819a;
+      }
+      body.light-mode { background: radial-gradient(circle at 8% 0%, rgba(203, 166, 247, 0.18), transparent 26rem), radial-gradient(circle at 98% 12%, rgba(140, 170, 238, 0.16), transparent 24rem), var(--bg-color); }
+      body.light-mode header { background: linear-gradient(105deg, rgba(255, 255, 255, 0.95), rgba(242, 245, 255, 0.9) 56%, rgba(239, 247, 255, 0.92)); border-color: rgba(99, 102, 241, 0.18); box-shadow: 0 18px 45px rgba(41, 53, 90, 0.1), inset 0 1px 0 #fff; }
+      body.light-mode header h1 { background: linear-gradient(115deg, #252a4a, #4f46a5 52%, #0f7490); -webkit-background-clip: text; }
+      body.light-mode .panel, body.light-mode .tech-card { background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(247, 249, 255, 0.86)); box-shadow: 0 16px 40px rgba(41, 53, 90, 0.08), inset 0 1px 0 #fff; }
+      body.light-mode .table-container { background: rgba(255, 255, 255, 0.76); border-color: rgba(57, 70, 111, 0.1); }
+      body.light-mode th { background: rgba(243, 245, 251, 0.9); border-color: rgba(57, 70, 111, 0.08); }
+      body.light-mode td, body.light-mode tr { border-color: rgba(57, 70, 111, 0.07); }
+      body.light-mode tr:hover { background: rgba(79, 70, 229, 0.055) !important; }
+      body.light-mode .search-input, body.light-mode .theme-toggle-btn, body.light-mode .view-toggle { background: rgba(255, 255, 255, 0.86); }
+      body.light-mode .modal-card, body.light-mode #tech-modal .modal-card { background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 254, 0.98)); }
+      body.light-mode .edu-card { background: rgba(255, 255, 255, 0.66); border-color: rgba(57, 70, 111, 0.09); }
+      body.light-mode .compare-bar { background: rgba(255, 255, 255, 0.88); }
+      body.light-mode .tabs-wrapper { border-bottom-color: rgba(57, 70, 111, 0.2); }
+      body.light-mode .mui-tab-indicator {
+        background: linear-gradient(90deg, #4f46e5, #0284c7);
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+      }
+      body.light-mode .tab-item.active { color: #312e81; background: rgba(79, 70, 229, 0.09); }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
       }
     </style>
   </head>
-  <body class="dense-view">
+  <body>
     <!-- Ambient Glow Backgrounds -->
     <div class="ambient-glow"></div>
     <div class="ambient-glow-2"></div>
@@ -3117,7 +3183,9 @@
                 min-width: max-content;
               "
               id="result-count"
-              >Showing all items</span
+              aria-hidden="true"
+              hidden
+              ></span
             >
 
             <!-- Filter tabs -->
@@ -3153,16 +3221,7 @@
               <div class="mui-tab-indicator" id="mui-tab-indicator"></div>
             </div>
 
-            <!-- MUI Switch for Dense Mode -->
-            <div class="mui-switch-container" id="density-switch-container" style="margin-left: 1.5rem;">
-              <span>Dense View</span>
-              <label class="mui-switch">
-                <input type="checkbox" id="density-switch" checked />
-                <span class="mui-switch-slider"></span>
-              </label>
-            </div>
-
-            <div class="view-toggle" style="margin-left: 1rem">
+            <div class="view-toggle">
               <button
                 class="toggle-btn active"
                 id="view-table-btn"
@@ -4315,12 +4374,6 @@
 
       // No playground references
 
-      // DOM References for Redesign
-      const densitySwitch = document.getElementById("density-switch");
-      const muiSpeedDial = document.getElementById("mui-speed-dial");
-      const mainFab = document.getElementById("main-fab");
-      const fabBadge = document.getElementById("fab-badge");
-
       // Chakra Toast Notification System Helper
       window.chakraToast = {
         show({ title, description, status = "info", duration = 3000 }) {
@@ -4767,116 +4820,6 @@
             });
           });
         });
-
-
-
-        // Density Switch Events
-        if (densitySwitch) {
-          densitySwitch.addEventListener("change", () => {
-            if (densitySwitch.checked) {
-              document.body.classList.add("dense-view");
-              chakraToast.show({
-                title: "Dense View Enabled",
-                description: "Padding and gaps compressed for dense viewing",
-                status: "success",
-                duration: 2000
-              });
-            } else {
-              document.body.classList.remove("dense-view");
-              chakraToast.show({
-                title: "Normal View Enabled",
-                description: "Standard padding and gaps restored",
-                status: "info",
-                duration: 2000
-              });
-            }
-          });
-        }
-
-        // MUI Floating Action Button (FAB) Speed Dial Events
-        if (mainFab) {
-          mainFab.addEventListener("click", (e) => {
-            e.stopPropagation();
-            // Create a small MUI ripple inside the FAB button
-            const ripple = document.createElement("span");
-            ripple.classList.add("mui-ripple");
-            const rect = mainFab.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            mainFab.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-
-            muiSpeedDial.classList.toggle("open");
-          });
-
-          // Close speed dial if clicking elsewhere
-          document.addEventListener("click", () => {
-            if (muiSpeedDial) muiSpeedDial.classList.remove("open");
-          });
-
-          // Action buttons in speed dial
-          const actSim = document.getElementById("action-simulator");
-          const actComp = document.getElementById("action-compare");
-          const actReset = document.getElementById("action-reset");
-          const actTheme = document.getElementById("action-theme");
-
-          if (actSim) {
-            actSim.addEventListener("click", (e) => {
-              e.stopPropagation();
-              if (selectedCompareItems.length >= 1) {
-                openAnalyzerModal();
-              } else {
-                chakraToast.show({
-                  title: "Simulator Warning",
-                  description: "Please add at least 1 technology to your stack to run the simulator.",
-                  status: "warning"
-                });
-              }
-              muiSpeedDial.classList.remove("open");
-            });
-          }
-
-          if (actComp) {
-            actComp.addEventListener("click", (e) => {
-              e.stopPropagation();
-              if (selectedCompareItems.length >= 2) {
-                openComparisonModal();
-              } else {
-                chakraToast.show({
-                  title: "Comparison Info",
-                  description: "Please select at least 2 technologies to compare them.",
-                  status: "info"
-                });
-              }
-              muiSpeedDial.classList.remove("open");
-            });
-          }
-
-          if (actReset) {
-            actReset.addEventListener("click", (e) => {
-              e.stopPropagation();
-              clearComparison();
-              chakraToast.show({
-                title: "Ecosystem Reset",
-                description: "Cleared all comparison selections",
-                status: "info"
-              });
-              muiSpeedDial.classList.remove("open");
-            });
-          }
-
-          if (actTheme) {
-            actTheme.addEventListener("click", (e) => {
-              e.stopPropagation();
-              const themeBtn = document.getElementById("theme-toggle-btn");
-              if (themeBtn) themeBtn.click();
-              muiSpeedDial.classList.remove("open");
-            });
-          }
-        }
-
         // Global Keyboard Shortcut handler (Chakra Hint)
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape") {
@@ -4937,21 +4880,8 @@
           });
         }
 
-        updateFabBadge();
         updateCompareBar();
       };
-
-      function updateFabBadge() {
-        if (fabBadge) {
-          const count = selectedCompareItems.length;
-          if (count > 0) {
-            fabBadge.textContent = count;
-            fabBadge.style.display = "flex";
-          } else {
-            fabBadge.style.display = "none";
-          }
-        }
-      }
 
       function highlightCompareButtons(techId, isActive) {
         document.querySelectorAll(".compare-action-btn").forEach((btn) => {
@@ -5096,7 +5026,6 @@
           analyzeBtn.style.opacity = "0.6";
         }
         document.getElementById("compare-bar").classList.remove("active");
-        updateFabBadge();
       };
 
       window.openComparisonModal = function () {
@@ -5954,28 +5883,6 @@
         localStorage.setItem("theme", "dark");
       }
     </script>
-
-    <!-- MUI Floating Action Button (FAB) Speed Dial -->
-    <div class="mui-speed-dial-container" id="mui-speed-dial">
-      <button class="mui-fab" id="main-fab" title="Quick Actions">
-        <i data-lucide="layers" size="24"></i>
-        <span class="mui-fab-badge" id="fab-badge" style="display: none;">0</span>
-      </button>
-      <div class="mui-speed-dial-actions">
-        <button class="mui-speed-dial-action" id="action-simulator" data-label="Run Stack Simulator" title="Run Stack Simulator">
-          <i data-lucide="play" size="18"></i>
-        </button>
-        <button class="mui-speed-dial-action" id="action-compare" data-label="View Comparison" title="View Comparison">
-          <i data-lucide="arrow-left-right" size="18"></i>
-        </button>
-        <button class="mui-speed-dial-action" id="action-reset" data-label="Reset All Filters" title="Reset All Filters">
-          <i data-lucide="rotate-ccw" size="18"></i>
-        </button>
-        <button class="mui-speed-dial-action" id="action-theme" data-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">
-          <i data-lucide="sun" size="18"></i>
-        </button>
-      </div>
-    </div>
 
     <!-- Prism.js Core + Autoloader Plugin for on-demand syntax highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
