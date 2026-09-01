@@ -472,7 +472,7 @@
         border-bottom-color: var(--rule-2);
       }
 
-      /* category is typographic, not chromatic: 32 rows, 7 categories,
+      /* category is typographic, not chromatic: 32 rows, 8 categories,
          seven hues would be a fruit salad. ls solved this with letters. */
       .cat {
         font-family: var(--mono);
@@ -1446,6 +1446,11 @@
             <span>Extraction</span>
             <span class="rail-count" data-rail-count="Data Extraction"></span>
           </button>
+          <button class="rail-item" type="button" data-category="Search APIs">
+            <span class="mark" aria-hidden="true"></span>
+            <span>Search APIs</span>
+            <span class="rail-count" data-rail-count="Search APIs"></span>
+          </button>
           <button class="rail-item" type="button" data-category="AI Memory Layer">
             <span class="mark" aria-hidden="true"></span>
             <span>AI memory</span>
@@ -2298,6 +2303,30 @@ herdr`,
           ],
           code: `from mem0 import Memory\n\n# Initialize Mem0 with custom vector store configuration\nconfig = {\n    "vector_store": {\n        "provider": "qdrant",\n        "config": {\n            "host": "localhost",\n            "port": 6333,\n        }\n    }\n}\nm = Memory.from_config(config)\n\n# Store user memory context\nm.add("User prefers TypeScript and Vite for frontend development", user_id="alex")\n\n# Search memory relevant to query\nresults = m.search("What is Alex's preferred tech stack?", user_id="alex")\nprint(results)`,
         },
+        {
+          id: "serpapi",
+          name: "SerpApi",
+          category: "Search APIs",
+          role: "Real-Time Search Engine Results API",
+          popularity: 85,
+          link: "https://serpapi.com/",
+          highlight:
+            "Query \u2192 SerpApi (proxy, CAPTCHA and parsing handled) \u2192 structured JSON SERP data.",
+          description:
+            "SerpApi is a hosted API that runs a query against Google and other engines (Bing, DuckDuckGo, Baidu, YouTube, Google Maps, Scholar, Images, News, Amazon) and returns the results page already parsed into structured JSON. It manages the proxy pool, browser rendering, CAPTCHA solving and per-engine HTML parsing, so callers never touch raw SERP markup.",
+          whyPopular:
+            "Scraping search engines in-house means fighting rotating layouts, rate limits and CAPTCHAs forever. SerpApi turns that into one HTTP call with a legal-shield guarantee and location/language targeting, which has made it the default grounding-data source for RAG pipelines and AI agents that need fresh web results.",
+          pros: [
+            "Structured JSON for organic results, ads, knowledge graph, answer boxes and more",
+            "Proxies, CAPTCHA solving and layout changes handled upstream \u2014 no scraper maintenance",
+            "Precise geo/locale targeting plus official Python, Node, Ruby and Go clients",
+          ],
+          cons: [
+            "Paid per search \u2014 costs scale directly with query volume",
+            "External dependency: latency and availability sit outside your infrastructure",
+          ],
+          code: `import os\nfrom serpapi import GoogleSearch\n\nparams = {\n    "engine": "google",\n    "q": "best vector database 2025",\n    "location": "Austin, Texas",\n    "hl": "en",\n    "gl": "us",\n    "api_key": os.environ["SERPAPI_API_KEY"],\n}\n\nresults = GoogleSearch(params).get_dict()\n\nfor r in results.get("organic_results", []):\n    print(r["position"], r["title"], r["link"])\n\n# Grounding context for an LLM prompt\ncontext = "\\n".join(r["snippet"] for r in results["organic_results"][:5])`,
+        },
       ];
 
       /* =========================================================
@@ -2364,6 +2393,7 @@ herdr`,
         if (category === "Database") return "DB";
         if (category === "API Layer") return "API";
         if (category === "Data Extraction") return "EX";
+        if (category === "Search APIs") return "SE";
         if (category === "AI Memory Layer") return "AI";
         if (category === "Tools") return "TL";
         return "??";
@@ -2661,6 +2691,9 @@ herdr`,
           "Data Extraction": techStack.filter(
             (i) => i.category === "Data Extraction",
           ).length,
+          "Search APIs": techStack.filter(
+            (i) => i.category === "Search APIs",
+          ).length,
           "AI Memory Layer": techStack.filter(
             (i) => i.category === "AI Memory Layer",
           ).length,
@@ -2679,6 +2712,7 @@ herdr`,
           "Backend Layer": "backend",
           "Database & APIs": "data",
           "Data Extraction": "extraction",
+          "Search APIs": "search-apis",
           "AI Memory Layer": "ai-memory",
           Tools: "tools",
         };
