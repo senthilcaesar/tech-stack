@@ -2304,6 +2304,31 @@ herdr`,
           code: `from mem0 import Memory\n\n# Initialize Mem0 with custom vector store configuration\nconfig = {\n    "vector_store": {\n        "provider": "qdrant",\n        "config": {\n            "host": "localhost",\n            "port": 6333,\n        }\n    }\n}\nm = Memory.from_config(config)\n\n# Store user memory context\nm.add("User prefers TypeScript and Vite for frontend development", user_id="alex")\n\n# Search memory relevant to query\nresults = m.search("What is Alex's preferred tech stack?", user_id="alex")\nprint(results)`,
         },
         {
+          id: "hindsight",
+          name: "Hindsight",
+          category: "AI Memory Layer",
+          role: "Agent Memory System That Learns",
+          popularity: 96,
+          link: "https://github.com/vectorize-io/hindsight",
+          highlight:
+            "Biomimetic agent memory system — agents that learn over time, not just remember",
+          description:
+            "Hindsight is an agent memory system by Vectorize.io that goes beyond simple conversation recall. It uses biomimetic data structures (world facts, experiences, observations, mental models) to organize memories the way human cognition works, enabling agents that genuinely learn and adapt across sessions.",
+          whyPopular:
+            "Hindsight achieves state-of-the-art accuracy on the LongMemEval benchmark, independently verified by Virginia Tech and The Washington Post. Its three-operation model (retain, recall, reflect) with multi-pathway retrieval (semantic, keyword, graph, temporal) and automatic observation consolidation makes it the most capable agent memory layer available. 60+ integrations and support for 25+ LLM providers make adoption frictionless.",
+          pros: [
+            "State-of-the-art LongMemEval benchmark accuracy, independently reproduced",
+            "Three operations (retain, recall, reflect) with biomimetic memory types",
+            "60+ integrations — Claude Code, Cursor, LangChain, CrewAI, n8n and more",
+            "Built-in MCP server, multilingual support and memory defense (PII redaction)",
+          ],
+          cons: [
+            "Requires an LLM provider for fact extraction during retain operations",
+            "Self-hosted mode needs PostgreSQL + pgvector for production workloads",
+          ],
+          code: `from hindsight_client import Hindsight\n\nclient = Hindsight(base_url="http://localhost:8888")\n\n# Retain: store information into agent memory\nclient.retain(\n    bank_id="my-bank",\n    content="Alice got promoted to senior engineer",\n    context="career update",\n)\n\n# Recall: retrieve relevant memories (semantic + keyword + graph + temporal)\nresults = client.recall(bank_id="my-bank", query="What does Alice do?")\nprint(results)\n\n# Reflect: deep analysis — form new connections between memories\nresponse = client.reflect(bank_id="my-bank", query="What should I know about Alice?")`,
+        },
+        {
           id: "serpapi",
           name: "SerpApi",
           category: "Search APIs",
