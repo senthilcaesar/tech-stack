@@ -2280,6 +2280,31 @@ herdr`,
           code: `from pdfminer.high_level import extract_text\nimport pdfplumber\n\n# Option 1: pdfminer.six — raw layout-aware text extraction\ntext = extract_text("report.pdf")\n\n# Option 2: pdfplumber — structured text + tables\nwith pdfplumber.open("report.pdf") as pdf:\n    for page in pdf.pages:\n        print(page.extract_text())\n        for table in page.extract_tables():\n            print(table)`,
         },
         {
+          id: "docling",
+          name: "Docling",
+          category: "Data Extraction",
+          role: "Document Extraction & Parsing",
+          popularity: 92,
+          link: "https://docling-project.github.io/docling/",
+          highlight:
+            "Documents (PDF, DOCX, PPTX, XLSX, images) → Docling (layout AI & TableFormer) → structured Markdown, JSON, and RAG chunks.",
+          description:
+            "Docling is an open-source document processing library developed by the docling-project. It parses complex documents (PDFs, Office files, images, HTML) into rich, structured representations, using specialized deep learning models for layout analysis, reading order recovery, and table structure extraction (TableFormer).",
+          whyPopular:
+            "Legacy parsers frequently struggle with complex multicolumn layouts, formulas, and tables. Docling uses purpose-built computer vision and layout models to preserve document hierarchy, reading sequence, and tabular data with benchmark-leading fidelity. With built-in chunkers and native integrations for LangChain, LlamaIndex, Haystack, and crewAI, it is the modern standard for GenAI ingestion engines.",
+          pros: [
+            "Broad format support: PDF (scanned & digital), DOCX, PPTX, XLSX, HTML, images, and audio",
+            "Advanced layout vision models: reading order recovery, formula detection, and TableFormer table extraction",
+            "Exports cleanly to structured DoclingDocument, markdown, JSON, and semantic RAG chunks",
+            "First-class integrations with LangChain, LlamaIndex, Haystack, crewAI, and Hugging Face",
+          ],
+          cons: [
+            "Higher compute and memory footprint than lightweight regex/text-only extractors",
+            "First run requires downloading ML model weights, adding initial cold-start latency",
+          ],
+          code: `from docling.document_converter import DocumentConverter\n\n# Initialize the document converter\nconverter = DocumentConverter()\n\n# Convert PDF, DOCX, PPTX, XLSX, or image (local file or URL)\nresult = converter.convert("https://arxiv.org/pdf/2408.09869")\n\n# Export layout-aware structured Markdown for LLM / RAG ingestion\nmarkdown_content = result.document.export_to_markdown()\nprint(markdown_content[:500])\n\n# Access recognized tables as pandas DataFrames\nfor table in result.document.tables:\n    df = table.export_to_dataframe()\n    print(df.head())`,
+        },
+        {
           id: "mem0",
           name: "Mem0",
           category: "AI Memory Layer",
