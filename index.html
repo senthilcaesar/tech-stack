@@ -1456,6 +1456,11 @@
             <span>AI memory</span>
             <span class="rail-count" data-rail-count="AI Memory Layer"></span>
           </button>
+          <button class="rail-item" type="button" data-category="AI Evaluation">
+            <span class="mark" aria-hidden="true"></span>
+            <span>AI evaluation</span>
+            <span class="rail-count" data-rail-count="AI Evaluation"></span>
+          </button>
           <button class="rail-item" type="button" data-category="Tools">
             <span class="mark" aria-hidden="true"></span>
             <span>Tools</span>
@@ -2040,6 +2045,31 @@ npx skills add herdrdev/herdr --skill herdr -g
 herdr`,
         },
         {
+          id: "ccstatusline",
+          name: "ccstatusline",
+          category: "Tools",
+          role: "Claude Code Statusline Customizer",
+          popularity: 89,
+          link: "https://github.com/sirmalloc/ccstatusline",
+          highlight:
+            "Customizable statusline for Claude Code CLI with powerline support, themes, and real-time metrics.",
+          description:
+            "ccstatusline is a statusline enhancement for the Claude Code CLI. It provides an interactive TUI customizer to format status bars with powerline symbols, git branch tracking, model names, context window token usage, duration, and session cost metrics.",
+          whyPopular:
+            "Claude Code CLI users frequently need real-time awareness of context token limits, session costs, active git branches, and current LLM models without interrupting their prompt flow. ccstatusline adds a rich, highly configurable powerline status bar that updates dynamically with zero configuration friction.",
+          pros: [
+            "Rich powerline segment support with themes and color customization",
+            "Interactive TUI configuration manager (npx ccstatusline@latest)",
+            "Live display of tokens, session cost, model name, and git branch status",
+            "Lightweight, fast, and seamless integration with Claude Code settings",
+          ],
+          cons: [
+            "Requires a Nerd Font installed in the terminal for powerline glyph rendering",
+            "Tailored specifically for Claude Code CLI environments",
+          ],
+          code: `# Launch the interactive ccstatusline customizer\nnpx ccstatusline@latest\n\n# Or configure Claude Code config directly (~/.claude/config.json or settings)\n# Example statusline command:\nccstatusline --theme catppuccin-mocha --powerline`,
+        },
+        {
           id: "pymupdf",
           name: "PyMuPDF + PaddleOCR",
           category: "Data Extraction",
@@ -2377,6 +2407,33 @@ herdr`,
           ],
           code: `import os\nfrom serpapi import GoogleSearch\n\nparams = {\n    "engine": "google",\n    "q": "best vector database 2025",\n    "location": "Austin, Texas",\n    "hl": "en",\n    "gl": "us",\n    "api_key": os.environ["SERPAPI_API_KEY"],\n}\n\nresults = GoogleSearch(params).get_dict()\n\nfor r in results.get("organic_results", []):\n    print(r["position"], r["title"], r["link"])\n\n# Grounding context for an LLM prompt\ncontext = "\\n".join(r["snippet"] for r in results["organic_results"][:5])`,
         },
+        {
+          id: "ragas",
+          name: "Ragas",
+          category: "AI Evaluation",
+          role: "RAG & LLM Evaluation Framework",
+          popularity: 93,
+          link: "https://docs.ragas.io/en/latest/",
+          reference:
+            "https://langfuse.com/resources/engineering/evaluation-of-rag-with-ragas",
+          highlight:
+            "Component-level evaluation framework & synthetic testset generation for RAG pipelines and LLM apps.",
+          description:
+            "Ragas (Retrieval Augmented Generation Assessment) is an open-source evaluation framework designed to quantify the performance of RAG pipelines and LLM agents. It provides standardized, reference-free and reference-based metrics across retrieval (context precision, context recall) and generation (faithfulness, answer relevance), alongside automated test dataset generation.",
+          whyPopular:
+            "Evaluating RAG systems and LLM outputs manually is slow and unscalable. Ragas establishes a rigorous standard for measuring hallucinations and retrieval quality without requiring ground-truth human annotations. Its seamless integration with LLM observability platforms like Langfuse and frameworks like LangChain and LlamaIndex makes continuous CI/CD evaluation and production monitoring seamless.",
+          pros: [
+            "Comprehensive RAG triad metrics: Faithfulness (hallucination detection), Context Precision, Context Recall, and Answer Relevance",
+            "Automated synthetic test data generation using document corpus evolution",
+            "Reference-free LLM-as-a-judge scoring eliminates expensive manual labeling workflows",
+            "Native observability integrations with Langfuse, OpenTelemetry, LangChain, and LlamaIndex",
+          ],
+          cons: [
+            "LLM-as-a-judge evaluations consume model API tokens and add evaluation latency",
+            "Evaluator LLMs can display stochastic scoring variability across prompt iterations",
+          ],
+          code: `from datasets import Dataset\nfrom ragas import evaluate\nfrom ragas.metrics import (\n    faithfulness,\n    answer_relevance,\n    context_precision,\n    context_recall,\n)\n\n# Prepare evaluation dataset from RAG traces (e.g. traced with Langfuse)\neval_dataset = Dataset.from_dict({\n    "question": ["What is Ragas?"],\n    "answer": ["Ragas is an evaluation framework for RAG pipelines."],\n    "contexts": [["Ragas provides metric tools to evaluate RAG pipelines component-wise."]],\n    "ground_truth": ["Ragas is a framework for evaluating RAG applications."],\n})\n\n# Evaluate retrieval and generation metrics\nresults = evaluate(\n    dataset=eval_dataset,\n    metrics=[faithfulness, answer_relevance, context_precision, context_recall],\n)\n\nprint(results.to_pandas())\n# Export or stream scores to Langfuse for continuous observability`,
+        },
       ];
 
       /* =========================================================
@@ -2445,6 +2502,7 @@ herdr`,
         if (category === "Data Extraction") return "EX";
         if (category === "Search APIs") return "SE";
         if (category === "AI Memory Layer") return "AI";
+        if (category === "AI Evaluation") return "EV";
         if (category === "Tools") return "TL";
         return "??";
       }
@@ -2478,6 +2536,7 @@ herdr`,
       function langOf(item) {
         if (item.id === "postgresql") return "sql";
         if (["nextjs", "zustand", "material-ui"].includes(item.id)) return "ts";
+        if (["ghostty", "herdr", "ccstatusline"].includes(item.id)) return "sh";
         if (
           /^from\s+[\w.]+\s+import\s/m.test(item.code) ||
           /^import\s+[\w.]+\s*$/m.test(item.code) ||
@@ -2494,15 +2553,16 @@ herdr`,
         js: "const let var function return if else for while do switch case break continue import from export default new await async class extends implements interface type as of in try catch finally throw typeof instanceof void delete yield static public private readonly null undefined true false this super",
         py: "def class return if elif else for while import from as with try except finally raise pass lambda yield global nonlocal assert del in is not and or None True False async await self print",
         sql: "select from where insert into values update set delete create table alter drop primary key foreign references index on join left right inner outer group by order having limit offset distinct and or not null default unique constraint returning with using cascade check exists text integer serial boolean timestamp varchar jsonb uuid",
+        sh: "if then else elif fi for in do done while until case esac function select export unset source alias unalias",
       };
 
       // Small hand-rolled tokenizer. Tokenising the whole source before
       // splitting on newlines is what keeps block comments and multi-line
       // strings from breaking across the numbered lines.
       function highlight(code, lang) {
-        const g = lang === "sql" ? "sql" : lang === "py" ? "py" : "js";
-        const kw = new Set(KEYWORDS[g].split(" "));
-        const lineComment = g === "py" ? "#" : g === "sql" ? "--" : "//";
+        const g = lang === "sql" ? "sql" : (lang === "py" || lang === "sh") ? lang : "js";
+        const kw = new Set((KEYWORDS[g] || KEYWORDS.js).split(" "));
+        const lineComment = (g === "py" || g === "sh") ? "#" : g === "sql" ? "--" : "//";
         const toks = [];
         let i = 0;
         let m;
@@ -2747,6 +2807,9 @@ herdr`,
           "AI Memory Layer": techStack.filter(
             (i) => i.category === "AI Memory Layer",
           ).length,
+          "AI Evaluation": techStack.filter(
+            (i) => i.category === "AI Evaluation",
+          ).length,
           Tools: techStack.filter((i) => i.category === "Tools").length,
         };
         Object.entries(counts).forEach(([k, v]) => {
@@ -2764,6 +2827,7 @@ herdr`,
           "Data Extraction": "extraction",
           "Search APIs": "search-apis",
           "AI Memory Layer": "ai-memory",
+          "AI Evaluation": "ai-eval",
           Tools: "tools",
         };
         els.stFilter.textContent = labels[filter] || filter;
@@ -2912,7 +2976,16 @@ herdr`,
               esc(item.link) +
               '" target="_blank" rel="noopener noreferrer">' +
               esc(item.link.replace(/^https?:\/\//, "")) +
-              "</a></p>" +
+              "</a>" +
+              (item.reference ? " (Documentation)" : "") +
+              "</p>" +
+              (item.reference
+                ? '<p><a href="' +
+                  esc(item.reference) +
+                  '" target="_blank" rel="noopener noreferrer">' +
+                  esc(item.reference.replace(/^https?:\/\//, "")) +
+                  "</a> (Reference)</p>"
+                : "") +
               (seeAlso.length
                 ? "<p>" +
                   seeAlso
