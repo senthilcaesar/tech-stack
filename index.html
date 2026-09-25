@@ -2070,6 +2070,31 @@ herdr`,
           code: `# Launch the interactive ccstatusline customizer\nnpx ccstatusline@latest\n\n# Or configure Claude Code config directly (~/.claude/config.json or settings)\n# Example statusline command:\nccstatusline --theme catppuccin-mocha --powerline`,
         },
         {
+          id: "ngrok",
+          name: "ngrok",
+          category: "Tools",
+          role: "Secure Tunneling & Ingress Platform",
+          popularity: 94,
+          link: "https://ngrok.com/",
+          highlight:
+            "Expose local dev servers and APIs securely to the public internet with instant HTTPS tunnels.",
+          description:
+            "ngrok is a unified ingress platform and tunneling service that creates secure, publicly accessible HTTPS and TCP endpoints forwarding directly to local development ports. It offers instant webhook testing, TLS termination, API gateway capabilities, request inspection, OAuth/OIDC authentication, and traffic replay.",
+          whyPopular:
+            "Testing webhooks (Stripe, GitHub, Twilio, Slack) and mobile API clients against a local development server without deploying to cloud staging or configuring router port forwarding is historically painful. ngrok turns any localhost port into a production-grade, secure public URL in a single command, complete with a local browser-based traffic inspection dashboard.",
+          pros: [
+            "Instant public HTTPS URLs for local services with zero firewall or NAT configuration",
+            "Built-in web inspection console (http://127.0.0.1:4040) for real-time HTTP header/payload inspection and replay",
+            "Edge security capabilities: OAuth/OIDC, webhook verification, IP allowlists, and mutual TLS (mTLS)",
+            "Cross-platform support: native CLI, official Docker images, Kubernetes Ingress Controller, and language SDKs",
+          ],
+          cons: [
+            "Free tier uses ephemeral dynamic URLs and is subject to monthly bandwidth limits",
+            "Persistent custom domains and advanced ingress policy routing require paid tiers",
+          ],
+          code: `# Expose a local development server running on port 3000\nngrok http 3000\n\n# Expose with a static custom domain and basic authentication\nngrok http 8080 --domain=api.yourdomain.com --basic-auth="dev:secret"\n\n# Inspect and replay incoming requests via local web UI\n# Open http://localhost:4040 in your browser`,
+        },
+        {
           id: "pymupdf",
           name: "PyMuPDF + PaddleOCR",
           category: "Data Extraction",
@@ -2536,7 +2561,7 @@ herdr`,
       function langOf(item) {
         if (item.id === "postgresql") return "sql";
         if (["nextjs", "zustand", "material-ui"].includes(item.id)) return "ts";
-        if (["ghostty", "herdr", "ccstatusline"].includes(item.id)) return "sh";
+        if (["ghostty", "herdr", "ccstatusline", "ngrok"].includes(item.id)) return "sh";
         if (
           /^from\s+[\w.]+\s+import\s/m.test(item.code) ||
           /^import\s+[\w.]+\s*$/m.test(item.code) ||
