@@ -1466,6 +1466,11 @@
             <span>Tools</span>
             <span class="rail-count" data-rail-count="Tools"></span>
           </button>
+          <button class="rail-item" type="button" data-category="Visualization">
+            <span class="mark" aria-hidden="true"></span>
+            <span>Visualization</span>
+            <span class="rail-count" data-rail-count="Visualization"></span>
+          </button>
         </div>
 
       </nav>
@@ -2095,6 +2100,31 @@ herdr`,
           code: `# Expose a local development server running on port 3000\nngrok http 3000\n\n# Expose with a static custom domain and basic authentication\nngrok http 8080 --domain=api.yourdomain.com --basic-auth="dev:secret"\n\n# Inspect and replay incoming requests via local web UI\n# Open http://localhost:4040 in your browser`,
         },
         {
+          id: "archify",
+          name: "Archify",
+          category: "Visualization",
+          role: "Interactive Architecture & Diagram Skill",
+          popularity: 91,
+          link: "https://github.com/tt-a1i/archify",
+          highlight:
+            "Agent skill for generating interactive, animated architecture and workflow diagrams in standalone HTML.",
+          description:
+            "Archify is an AI agent skill that turns system descriptions, workflows, sequence maps, and data-flow specifications into standalone interactive HTML diagrams. It features customizable design presets (Signal Flow, Blueprint, Classic), animated signal paths, theme toggles, and high-fidelity image exports.",
+          whyPopular:
+            "Static markdown diagrams and basic Mermaid graphs are often rigid and hard to navigate for complex system flows. Archify enables coding agents (Claude Code, Cursor, Codex, OpenCode) to generate animated, verifiable interactive visual diagrams that stakeholders can interact with directly in any browser.",
+          pros: [
+            "Generates standalone, zero-dependency interactive HTML files with fluid motion",
+            "Multiple visual themes and presets (Signal Flow, Blueprint, Classic light/dark)",
+            "Native agent skill installable via npx skills add tt-a1i/archify -g across Claude Code, Cursor, Codex",
+            "Supports deep interactive exploration, step walkthroughs, and crisp image export",
+          ],
+          cons: [
+            "Complex custom diagram styling may require guided iterative agent prompts",
+            "Output is designed as rich standalone web artifacts rather than native Markdown/Mermaid text",
+          ],
+          code: `# Install Archify agent skill globally\nnpx skills add tt-a1i/archify -g\n\n# Send to your AI coding agent (Claude Code, Cursor, Codex):\n# "Use Archify to diagram a web request: Browser calls API,\n# API checks Redis, and cache-miss queries PostgreSQL"`,
+        },
+        {
           id: "pymupdf",
           name: "PyMuPDF + PaddleOCR",
           category: "Data Extraction",
@@ -2528,6 +2558,7 @@ herdr`,
         if (category === "Search APIs") return "SE";
         if (category === "AI Memory Layer") return "AI";
         if (category === "AI Evaluation") return "EV";
+        if (category === "Visualization") return "VZ";
         if (category === "Tools") return "TL";
         return "??";
       }
@@ -2561,7 +2592,7 @@ herdr`,
       function langOf(item) {
         if (item.id === "postgresql") return "sql";
         if (["nextjs", "zustand", "material-ui"].includes(item.id)) return "ts";
-        if (["ghostty", "herdr", "ccstatusline", "ngrok"].includes(item.id)) return "sh";
+        if (["ghostty", "herdr", "ccstatusline", "ngrok", "archify"].includes(item.id)) return "sh";
         if (
           /^from\s+[\w.]+\s+import\s/m.test(item.code) ||
           /^import\s+[\w.]+\s*$/m.test(item.code) ||
@@ -2836,6 +2867,9 @@ herdr`,
             (i) => i.category === "AI Evaluation",
           ).length,
           Tools: techStack.filter((i) => i.category === "Tools").length,
+          Visualization: techStack.filter(
+            (i) => i.category === "Visualization",
+          ).length,
         };
         Object.entries(counts).forEach(([k, v]) => {
           const el = document.querySelector('[data-rail-count="' + k + '"]');
@@ -2854,6 +2888,7 @@ herdr`,
           "AI Memory Layer": "ai-memory",
           "AI Evaluation": "ai-eval",
           Tools: "tools",
+          Visualization: "visualization",
         };
         els.stFilter.textContent = labels[filter] || filter;
         els.stSort.textContent = sortColumn
