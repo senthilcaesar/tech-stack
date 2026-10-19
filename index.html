@@ -2426,6 +2426,31 @@ herdr`,
           code: `from docling.document_converter import DocumentConverter\n\n# Initialize the document converter\nconverter = DocumentConverter()\n\n# Convert PDF, DOCX, PPTX, XLSX, or image (local file or URL)\nresult = converter.convert("https://arxiv.org/pdf/2408.09869")\n\n# Export layout-aware structured Markdown for LLM / RAG ingestion\nmarkdown_content = result.document.export_to_markdown()\nprint(markdown_content[:500])\n\n# Access recognized tables as pandas DataFrames\nfor table in result.document.tables:\n    df = table.export_to_dataframe()\n    print(df.head())`,
         },
         {
+          id: "cohere-parse",
+          name: "Cohere Parse",
+          category: "Data Extraction",
+          role: "Multimodal Data Parsing",
+          popularity: 80,
+          link: "https://cohere.com/parse",
+          highlight:
+            "Vision parsing model that turns documents, tables and images into structured, grounded Markdown.",
+          description:
+            "Cohere Parse is Cohere's document vision parsing model (parse-v5.0). It reads scanned and digital PDFs, slides and images, performs OCR, understands tables, diagrams and figures, and returns Markdown per page with tables rendered as HTML, image descriptions, and bounding-box coordinates for every element. It also powers the ingestion and chunking stage of Cohere's Compass search platform.",
+          whyPopular:
+            "Text-only parsers lose the meaning carried by tables, charts and page layout, which hurts downstream RAG and agent accuracy. Parse uses a vision model to read pages the way a person does, and its bounding boxes let applications highlight the exact source region behind an answer. Enterprises can run it via the Cohere API, AWS SageMaker, Azure, or fully private and air-gapped deployments.",
+          pros: [
+            "Multimodal: OCR plus understanding of tables, diagrams and embedded images",
+            "Visual grounding with bounding boxes for citation and source highlighting",
+            "LLM-ready Markdown output with HTML tables and image descriptions",
+            "Flexible deployment: Cohere API, SageMaker, Azure, on-prem and air-gapped",
+          ],
+          cons: [
+            "Commercial, per-page priced managed model rather than open source",
+            "Limited to nine major languages; no native structured JSON output",
+          ],
+          code: `import base64\nimport cohere\n\nco = cohere.ClientV2(api_key="YOUR_API_KEY")\n\n# Encode a PDF, PPT or JPEG as a base64 data URI\nwith open("invoice.jpg", "rb") as f:\n    data_uri = "data:image/jpeg;base64," + base64.b64encode(f.read()).decode()\n\nresponse = co.parse(\n    model="parse-v5.0",\n    document={"type": "image_url", "image_url": data_uri},\n)\n\n# Each page comes back as Markdown (tables as HTML)\nfor page in response.pages:\n    print(page.markdown.content)`,
+        },
+        {
           id: "mem0",
           name: "Mem0",
           category: "AI Memory Layer",
