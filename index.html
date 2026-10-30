@@ -2161,6 +2161,81 @@ herdr`,
           code: `from locust import HttpUser, task, between\n\nclass WebsiteUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task(3)\n    def view_items(self):\n        self.client.get("/items")\n\n    @task\n    def checkout(self):\n        self.client.post("/checkout", json={"item_id": 42})\n\n# Run: locust -f locustfile.py --host https://api.example.com\n# Open http://localhost:8089 to start the swarm`,
         },
         {
+          id: "snyk",
+          name: "Snyk",
+          category: "Testing",
+          role: "Developer Security Testing",
+          popularity: 88,
+          link: "https://app.snyk.io/",
+          highlight:
+            "Developer-first security platform that scans dependencies, code, containers and IaC for vulnerabilities.",
+          description:
+            "Snyk is a developer security platform that finds and fixes vulnerabilities across the software supply chain. Snyk Open Source checks third-party dependencies (SCA), Snyk Code performs static analysis of your own source (SAST), Snyk Container scans images, and Snyk IaC checks Terraform, Kubernetes and CloudFormation configs. It runs from the CLI, IDE plugins, CI pipelines and Git integrations that open automatic fix pull requests.",
+          whyPopular:
+            "Security findings usually arrive late, from a separate team, in a format developers can't act on. Snyk moves the checks into the tools developers already use, backs them with a curated vulnerability database, and suggests concrete upgrades or fixes, so problems are caught at pull-request time rather than after release.",
+          pros: [
+            "One platform covering dependencies, source code, containers and IaC",
+            "Automatic fix pull requests with minimal safe upgrade paths",
+            "Integrates with IDEs, GitHub/GitLab/Bitbucket, CI tools and registries",
+            "Continuous monitoring alerts when new CVEs affect existing projects",
+          ],
+          cons: [
+            "Commercial SaaS; the free tier caps the number of monthly tests",
+            "Can be noisy on large monorepos without tuning policies and ignores",
+          ],
+          code: `# Install and authenticate the Snyk CLI\nnpm install -g snyk\nsnyk auth\n\n# Scan open-source dependencies (SCA)\nsnyk test\n\n# Static analysis of your own code (SAST)\nsnyk code test\n\n# Scan a container image and IaC files\nsnyk container test node:20-alpine\nsnyk iac test ./terraform\n\n# Snapshot the project for continuous monitoring\nsnyk monitor`,
+        },
+        {
+          id: "semgrep",
+          name: "Semgrep",
+          category: "Testing",
+          role: "Static Analysis (SAST)",
+          popularity: 85,
+          link: "https://semgrep.dev/",
+          highlight:
+            "Fast, open-source static analysis with rules that look like the code you are searching for.",
+          description:
+            "Semgrep is a lightweight static analysis engine that scans source code for bugs, security vulnerabilities and policy violations across 30+ languages. Rules are written in YAML using patterns that mirror the target language's syntax, so writing a custom check feels like writing code. Semgrep Community Edition is open source, while the Semgrep AppSec Platform adds cross-file analysis, supply-chain (SCA) and secrets scanning, and AI-assisted triage.",
+          whyPopular:
+            "Traditional SAST tools are slow, opaque and hard to customise. Semgrep runs in seconds locally or in CI, ships thousands of community rules, and lets any engineer encode a team-specific rule (\"never call this API without that check\") in a few lines, which makes it popular for both security teams and code-quality guardrails.",
+          pros: [
+            "Rules mirror source syntax, so custom checks are quick to write and read",
+            "Fast enough to run on every commit, pre-commit hook or pull request",
+            "Large registry of community and vendor-maintained rulesets",
+            "Open-source CLI that runs fully offline on your machine or CI runner",
+          ],
+          cons: [
+            "Community Edition analyses within single files; cross-file dataflow needs the paid Pro engine",
+            "Pattern-based rules can produce false positives that need tuning",
+          ],
+          code: `# Install the Semgrep CLI\npip install semgrep   # or: brew install semgrep\n\n# Scan the current repo with recommended rules\nsemgrep scan --config auto\n\n# Use a specific ruleset from the registry\nsemgrep scan --config p/owasp-top-ten\n\n# Custom rule: flag Python eval() calls (rules.yml)\n# rules:\n#   - id: no-eval\n#     pattern: eval(...)\n#     message: Avoid eval() on untrusted input\n#     languages: [python]\n#     severity: ERROR\nsemgrep scan --config rules.yml`,
+        },
+        {
+          id: "gitleaks",
+          name: "Gitleaks",
+          category: "Testing",
+          role: "Secrets Scanning",
+          popularity: 84,
+          link: "https://github.com/gitleaks/gitleaks",
+          highlight:
+            "Open-source scanner that detects hardcoded passwords, API keys and tokens in git repos and files.",
+          description:
+            "Gitleaks is an MIT-licensed tool written in Go for detecting secrets such as passwords, API keys and access tokens. It scans full git history, staged changes, directories or piped input using a large built-in set of regex and entropy rules, and can be extended with a .gitleaks.toml config. It runs as a CLI, a pre-commit hook, a Docker image or a GitHub Action, and outputs JSON, CSV, JUnit or SARIF reports.",
+          whyPopular:
+            "A single leaked credential committed to git can stay in history long after it is deleted from the latest code. Gitleaks is fast, free and easy to drop into pre-commit hooks and CI, so leaks are blocked before they are pushed and old ones can be found by scanning the entire history.",
+          pros: [
+            "Scans entire git history, not just the current working tree",
+            "Hundreds of built-in rules for common cloud, SaaS and API key formats",
+            "Simple to run as a pre-commit hook, Docker container or CI step",
+            "Custom rules, allowlists and baselines to manage known findings",
+          ],
+          cons: [
+            "Regex-based detection can miss bespoke secret formats or flag test fixtures",
+            "Finds leaks but does not rotate or revoke the exposed credentials",
+          ],
+          code: `# Install\nbrew install gitleaks\n\n# Scan the full git history of the current repo\ngitleaks git -v\n\n# Scan a plain directory (no git history)\ngitleaks dir ./src\n\n# Write a SARIF report for CI / code scanning\ngitleaks git --report-format sarif --report-path gitleaks.sarif\n\n# .pre-commit-config.yaml\n# repos:\n#   - repo: https://github.com/gitleaks/gitleaks\n#     rev: v8.24.2\n#     hooks:\n#       - id: gitleaks`,
+        },
+        {
           id: "pymupdf",
           name: "PyMuPDF + PaddleOCR",
           category: "Data Extraction",
