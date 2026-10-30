@@ -2236,6 +2236,32 @@ herdr`,
           code: `# Install\nbrew install gitleaks\n\n# Scan the full git history of the current repo\ngitleaks git -v\n\n# Scan a plain directory (no git history)\ngitleaks dir ./src\n\n# Write a SARIF report for CI / code scanning\ngitleaks git --report-format sarif --report-path gitleaks.sarif\n\n# .pre-commit-config.yaml\n# repos:\n#   - repo: https://github.com/gitleaks/gitleaks\n#     rev: v8.24.2\n#     hooks:\n#       - id: gitleaks`,
         },
         {
+          id: "codeql",
+          name: "CodeQL",
+          category: "Testing",
+          role: "Semantic Code Analysis",
+          popularity: 86,
+          link: "https://github.com/github/codeql",
+          highlight:
+            "GitHub's semantic code analysis engine that treats code as data and finds vulnerabilities with queries.",
+          description:
+            "CodeQL is the analysis engine behind GitHub code scanning. It builds a relational database from your source code, then runs queries written in QL, a declarative, object-oriented query language, to find vulnerabilities and bugs. The github/codeql repository holds the open standard libraries and queries for C/C++, C#, Go, Java/Kotlin, JavaScript/TypeScript, Python, Ruby, Swift and Rust. Results are produced as SARIF and surface as alerts in pull requests.",
+          whyPopular:
+            "Pattern matching misses bugs that only show up when you follow data through a program. CodeQL models data flow and taint across functions and files, so it can trace untrusted input from a request handler all the way to a SQL call. It is free for public repositories and switches on in GitHub with a single default-setup click.",
+          pros: [
+            "Deep interprocedural data-flow and taint tracking across files",
+            "Large, open, community-reviewed query packs maintained by GitHub Security Lab",
+            "Native GitHub integration: PR alerts, Security tab and Copilot Autofix",
+            "Custom queries can encode variant analysis for a newly found bug class",
+          ],
+          cons: [
+            "Free only for open-source and academic use; private repos need GitHub Advanced Security",
+            "Database builds for compiled languages are slow and need a working build",
+            "QL has a learning curve compared with simple pattern-based rules",
+          ],
+          code: `# Create a CodeQL database from the source tree\ncodeql database create codeql-db --language=python --source-root .\n\n# Run the standard security queries and write SARIF\ncodeql database analyze codeql-db \\\n  codeql/python-queries:codeql-suites/python-security-extended.qls \\\n  --format=sarif-latest --output=results.sarif\n\n# .github/workflows/codeql.yml (excerpt)\n# - uses: github/codeql-action/init@v3\n#   with:\n#     languages: python\n# - uses: github/codeql-action/analyze@v3`,
+        },
+        {
           id: "pymupdf",
           name: "PyMuPDF + PaddleOCR",
           category: "Data Extraction",
