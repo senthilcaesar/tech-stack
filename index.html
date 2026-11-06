@@ -1451,6 +1451,11 @@
             <span>Search APIs</span>
             <span class="rail-count" data-rail-count="Search APIs"></span>
           </button>
+          <button class="rail-item" type="button" data-category="AI Agents">
+            <span class="mark" aria-hidden="true"></span>
+            <span>AI agents</span>
+            <span class="rail-count" data-rail-count="AI Agents"></span>
+          </button>
           <button class="rail-item" type="button" data-category="AI Memory Layer">
             <span class="mark" aria-hidden="true"></span>
             <span>AI memory</span>
@@ -2552,6 +2557,34 @@ herdr`,
           code: `import base64\nimport cohere\n\nco = cohere.ClientV2(api_key="YOUR_API_KEY")\n\n# Encode a PDF, PPT or JPEG as a base64 data URI\nwith open("invoice.jpg", "rb") as f:\n    data_uri = "data:image/jpeg;base64," + base64.b64encode(f.read()).decode()\n\nresponse = co.parse(\n    model="parse-v5.0",\n    document={"type": "image_url", "image_url": data_uri},\n)\n\n# Each page comes back as Markdown (tables as HTML)\nfor page in response.pages:\n    print(page.markdown.content)`,
         },
         {
+          id: "pydantic-ai",
+          name: "Pydantic AI",
+          category: "AI Agents",
+          role: "Type-Safe Agent Framework",
+          popularity: 88,
+          link: "https://pydantic.dev/",
+          reference: "https://pydantic.dev/docs/ai/overview/",
+          highlight:
+            "Python framework for building AI agents whose outputs and tool calls are checked against your types.",
+          description:
+            "Pydantic AI is a Python framework for building AI agents, from the team behind the Pydantic validation library. You describe the answer you want as an ordinary Python class, and the framework checks every model response against it. Tool arguments are checked the same way before your code runs. The same agent can talk to OpenAI, Anthropic, Google, Bedrock, Groq, Mistral or a local Ollama model, and switching is usually a matter of changing one string.",
+          whyPopular:
+            "A language model returns text, and text can be wrong in ways Python won't notice until much later. Pydantic AI catches that at the boundary: an answer that doesn't fit your class is rejected at once rather than travelling further into the app. Teams already using Pydantic or FastAPI also have little new to learn, because agents are built from the same typed classes they write today.",
+          pros: [
+            "Validates model outputs and tool arguments against Python types",
+            "Typed dependency injection through RunContext makes agents easier to test and evaluate",
+            "Connects to external tools over the Model Context Protocol (MCP), and includes human approval for tool calls",
+            "Durable execution through Temporal, DBOS and Prefect, so long runs can survive a crash",
+            "Traces export over OpenTelemetry to any compatible backend, and Pydantic Evals scores agent runs",
+          ],
+          cons: [
+            "Python only (3.11+), so TypeScript teams need a different framework",
+            "Validation checks an answer's shape, not whether it is true: a well-formed answer can still be wrong",
+            "Fast-moving releases mean examples and pinned versions need regular checking",
+          ],
+          code: `# pip install pydantic-ai\nfrom typing import Literal\n\nfrom pydantic import BaseModel, Field\nfrom pydantic_ai import Agent, RunContext\n\nclass Sentiment(BaseModel):\n    label: Literal["positive", "negative", "neutral"]\n    score: float = Field(ge=-1, le=1)\n\nagent = Agent(\n    "openai:gpt-6.1-sol",  # needs OPENAI_API_KEY\n    output_type=Sentiment,\n    instructions="Classify how customers feel about a product.",\n)\n\n@agent.tool\ndef recent_reviews(ctx: RunContext, product: str) -> list[str]:\n    """Fetch recent reviews for a product."""\n    return [f"{product} saved me hours", f"{product} just works"]\n\nresult = agent.run_sync("How do people feel about the Extract app?")\nprint(result.output.label, result.output.score)`,
+        },
+        {
           id: "mem0",
           name: "Mem0",
           category: "AI Memory Layer",
@@ -2718,6 +2751,7 @@ herdr`,
         if (category === "API Layer") return "API";
         if (category === "Data Extraction") return "EX";
         if (category === "Search APIs") return "SE";
+        if (category === "AI Agents") return "AG";
         if (category === "AI Memory Layer") return "AI";
         if (category === "AI Evaluation") return "EV";
         if (category === "Visualization") return "VZ";
@@ -3023,6 +3057,9 @@ herdr`,
           "Search APIs": techStack.filter(
             (i) => i.category === "Search APIs",
           ).length,
+          "AI Agents": techStack.filter(
+            (i) => i.category === "AI Agents",
+          ).length,
           "AI Memory Layer": techStack.filter(
             (i) => i.category === "AI Memory Layer",
           ).length,
@@ -3049,6 +3086,7 @@ herdr`,
           "Database & APIs": "data",
           "Data Extraction": "extraction",
           "Search APIs": "search-apis",
+          "AI Agents": "ai-agents",
           "AI Memory Layer": "ai-memory",
           "AI Evaluation": "ai-eval",
           Tools: "tools",
