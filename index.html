@@ -2585,6 +2585,34 @@ herdr`,
           code: `# pip install pydantic-ai\nfrom typing import Literal\n\nfrom pydantic import BaseModel, Field\nfrom pydantic_ai import Agent, RunContext\n\nclass Sentiment(BaseModel):\n    label: Literal["positive", "negative", "neutral"]\n    score: float = Field(ge=-1, le=1)\n\nagent = Agent(\n    "openai:gpt-6.1-sol",  # needs OPENAI_API_KEY\n    output_type=Sentiment,\n    instructions="Classify how customers feel about a product.",\n)\n\n@agent.tool\ndef recent_reviews(ctx: RunContext, product: str) -> list[str]:\n    """Fetch recent reviews for a product."""\n    return [f"{product} saved me hours", f"{product} just works"]\n\nresult = agent.run_sync("How do people feel about the Extract app?")\nprint(result.output.label, result.output.score)`,
         },
         {
+          id: "langchain",
+          name: "LangChain",
+          category: "AI Agents",
+          role: "Agent Framework & Model Interface",
+          popularity: 95,
+          link: "https://www.langchain.com/",
+          reference: "https://docs.langchain.com/oss/python/langchain/overview",
+          highlight:
+            "Agent framework for Python and JavaScript, with one interface across model providers and middleware for adding controls.",
+          description:
+            "LangChain is an open-source framework for building AI agents in Python and JavaScript. Its central function, create_agent, wraps a model in the code an agent needs around it: prompts, tools and middleware, which are small add-ons that step in during a run to apply guardrails, retries or tool policies. Agents run on LangGraph, the same team's lower-level orchestration library, and LangSmith traces and evaluates them.",
+          whyPopular:
+            "Every model provider has its own API, so code written for one rarely moves cleanly to another. LangChain puts one interface in front of them, and switching provider usually takes only small code changes. Its agents also inherit persistence, durable execution and human-in-the-loop support from LangGraph, so a prototype can pick up those features without moving to a different framework.",
+          pros: [
+            "Standard interface across OpenAI, Anthropic, Google Gemini, Azure OpenAI, Bedrock, Ollama and more",
+            "Middleware adds guardrails, retries, routing and tool policies without rewriting the agent",
+            "Durable execution, persistence and human-in-the-loop support inherited from LangGraph",
+            "Structured output uses the provider's native schema support where available, and tool calling otherwise",
+            "Available in both Python and JavaScript",
+          ],
+          cons: [
+            "Several related projects to learn: LangChain, LangGraph, Deep Agents and LangSmith",
+            "Extra layers between your code and the model can make failures harder to trace",
+            "Its MCP (Model Context Protocol) adapter namespace is still in beta, so that API may change",
+          ],
+          code: `# pip install -qU langchain "langchain[openai]"\nfrom typing import Literal\n\nfrom langchain.agents import create_agent\nfrom pydantic import BaseModel, Field\n\nclass Sentiment(BaseModel):\n    label: Literal["positive", "negative", "neutral"]\n    score: float = Field(ge=-1, le=1)\n\ndef recent_reviews(product: str) -> list[str]:\n    """Fetch recent reviews for a product."""\n    return [f"{product} saved me hours", f"{product} just works"]\n\nagent = create_agent(\n    model="openai:gpt-5.5",  # needs OPENAI_API_KEY\n    tools=[recent_reviews],\n    system_prompt="Classify how customers feel about a product.",\n    response_format=Sentiment,\n)\n\nresult = agent.invoke(\n    {"messages": [{"role": "user", "content": "How do people feel about the Extract app?"}]}\n)\nprint(result["structured_response"])`,
+        },
+        {
           id: "mem0",
           name: "Mem0",
           category: "AI Memory Layer",
