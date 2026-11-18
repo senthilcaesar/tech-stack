@@ -2370,6 +2370,11 @@
             <span>AI agents</span>
             <span class="rail-count" data-rail-count="AI Agents"></span>
           </button>
+          <button class="rail-item" type="button" data-category="AI Context">
+            <span class="mark" aria-hidden="true"></span>
+            <span>AI context</span>
+            <span class="rail-count" data-rail-count="AI Context"></span>
+          </button>
           <button class="rail-item" type="button" data-category="AI Memory Layer">
             <span class="mark" aria-hidden="true"></span>
             <span>AI memory</span>
@@ -3524,6 +3529,36 @@ herdr`,
           code: `# pip install -qU langchain "langchain[openai]"\nfrom typing import Literal\n\nfrom langchain.agents import create_agent\nfrom pydantic import BaseModel, Field\n\nclass Sentiment(BaseModel):\n    label: Literal["positive", "negative", "neutral"]\n    score: float = Field(ge=-1, le=1)\n\ndef recent_reviews(product: str) -> list[str]:\n    """Fetch recent reviews for a product."""\n    return [f"{product} saved me hours", f"{product} just works"]\n\nagent = create_agent(\n    model="openai:gpt-5.5",  # needs OPENAI_API_KEY\n    tools=[recent_reviews],\n    system_prompt="Classify how customers feel about a product.",\n    response_format=Sentiment,\n)\n\nresult = agent.invoke(\n    {"messages": [{"role": "user", "content": "How do people feel about the Extract app?"}]}\n)\nprint(result["structured_response"])`,
         },
         {
+          id: "fastmcp",
+          name: "FastMCP",
+          category: "AI Context",
+          role: "MCP Server & Client Framework",
+          popularity: 90,
+          link: "https://gofastmcp.com/",
+          reference: "https://gofastmcp.com/getting-started/quickstart",
+          repo: "https://github.com/PrefectHQ/fastmcp",
+          highlight:
+            "Python framework for building Model Context Protocol (MCP) servers and clients: decorate a function and an agent can call it.",
+          description:
+            "FastMCP is an open-source (Apache 2.0) Python framework, maintained by Prefect, for building servers and clients that speak the Model Context Protocol (MCP), the open standard that lets AI agents discover and call outside tools. You write ordinary Python functions and mark them with decorators as tools, resources or prompts; FastMCP turns them into a server that any MCP client, such as Claude or Cursor, can connect to over stdio or HTTP. It also ships a client, a CLI for running and inspecting servers, authentication, middleware and server composition.",
+          whyPopular:
+            "The MCP specification is detailed, and handling its messages, schemas and transports by hand takes a lot of boilerplate. FastMCP hides all of that behind one decorator, so a working tool server can be a few lines long. Its original high-level API was folded into the official MCP Python SDK in 2024, and the standalone project has kept adding production features since, such as OAuth with identity providers, composing several servers behind one, and in-memory testing.",
+          pros: [
+            "A tool server is a few lines: decorate a function and type hints become the tool's input schema",
+            "Includes a Python client, so the same library builds and tests both sides of a connection",
+            "Built-in authentication with identity providers such as GitHub, plus middleware for logging and rate limits",
+            "Composes existing APIs and MCP servers behind one server, with tools you can rename or hide",
+            "CLI runs, inspects and installs servers; servers can be tested in memory without a network",
+          ],
+          cons: [
+            "Python only",
+            "Its API has drifted from the official MCP SDK's built-in FastMCP, which confuses newcomers about which one to import",
+            "Interactive app output (forms, tables, charts) depends on the MCP client supporting it",
+            "Managed hosting and governance features live in FastMCP Gateway, a separate paid product",
+          ],
+          code: `# uv add fastmcp\nfrom fastmcp import FastMCP\n\nmcp = FastMCP("Bookshop")\n\nBOOKS = ["Dune", "Neuromancer", "Hyperion"]\n\n@mcp.tool\ndef search_books(query: str) -> list[str]:\n    """Find books by title."""\n    q = query.lower()\n    return [b for b in BOOKS if q in b.lower()]\n\nif __name__ == "__main__":\n    mcp.run(transport="http", port=8000)\n\n# Run with the CLI instead:\n#   fastmcp run server.py:mcp --transport http --port 8000\n#\n# Call it from Python:\n#   from fastmcp import Client\n#   async with Client("http://localhost:8000/mcp") as client:\n#       print(await client.call_tool("search_books", {"query": "dune"}))`,
+        },
+        {
           id: "mem0",
           name: "Mem0",
           category: "AI Memory Layer",
@@ -3691,6 +3726,7 @@ herdr`,
         if (category === "Data Extraction") return "EX";
         if (category === "Search APIs") return "SE";
         if (category === "AI Agents") return "AG";
+        if (category === "AI Context") return "CX";
         if (category === "AI Memory Layer") return "AI";
         if (category === "AI Evaluation") return "EV";
         if (category === "Visualization") return "VZ";
@@ -3999,6 +4035,9 @@ herdr`,
           "AI Agents": techStack.filter(
             (i) => i.category === "AI Agents",
           ).length,
+          "AI Context": techStack.filter(
+            (i) => i.category === "AI Context",
+          ).length,
           "AI Memory Layer": techStack.filter(
             (i) => i.category === "AI Memory Layer",
           ).length,
@@ -4026,6 +4065,7 @@ herdr`,
           "Data Extraction": "extraction",
           "Search APIs": "search-apis",
           "AI Agents": "ai-agents",
+          "AI Context": "ai-context",
           "AI Memory Layer": "ai-memory",
           "AI Evaluation": "ai-eval",
           Tools: "tools",
@@ -4187,6 +4227,13 @@ herdr`,
                   '" target="_blank" rel="noopener noreferrer">' +
                   esc(item.reference.replace(/^https?:\/\//, "")) +
                   "</a> (Reference)</p>"
+                : "") +
+              (item.repo
+                ? '<p><a href="' +
+                  esc(item.repo) +
+                  '" target="_blank" rel="noopener noreferrer">' +
+                  esc(item.repo.replace(/^https?:\/\//, "")) +
+                  "</a> (Source code)</p>"
                 : "") +
               (seeAlso.length
                 ? "<p>" +
